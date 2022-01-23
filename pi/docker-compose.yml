@@ -1,0 +1,116 @@
+# vi:et
+version: '3'
+
+services:
+    traefik:
+        # The official v2 Traefik docker image
+        image: traefik:v2.5
+        container_name: traefik
+        command:
+            # Enables the web UI and tells Traefik to listen to docker
+            - "--api.dashboard=true"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--entrypoints.web.address=:80"
+            - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+            - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+            - "--entrypoints.websecure.address=:443"
+            - "--certificatesResolvers.le.acme.email=${EMAIL}"
+            - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
+            - "--certificatesResolvers.le.acme.dnsChallenge.provider=ovh"
+            - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=0"
+        ports:
+            - 80:80
+            - 443:443
+        environment:
+            - TZ
+        volumes:
+            # So that Traefik can listen to the Docker events
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${BASE_PATH}/traefik:/etc/traefik
+        environment:
+            - OVH_APPLICATION_KEY
+            - OVH_APPLICATION_SECRET
+            - OVH_CONSUMER_KEY
+            - OVH_ENDPOINT
+        labels:
+            - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
+            - traefik.http.routers.traefik.tls=true
+            - traefik.http.routers.traefik.tls.certresolver=le
+            - traefik.http.routers.traefik.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.traefik.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.traefik.loadbalancer.server.port=8080
+        restart: unless-stopped
+
+    portainer:
+        image: portainer/portainer-ce:latest
+        container_name: portainer
+        environment:
+            - TZ
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${BASE_PATH}/portainer:/data
+        labels:
+            - traefik.http.routers.portainer.rule=Host(`portainer.${FQDN}`)
+            - traefik.http.routers.portainer.tls=true
+            - traefik.http.routers.portainer.tls.certresolver=le
+            - traefik.http.routers.portainer.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.portainer.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.portainer.loadbalancer.server.port=9000
+        restart: unless-stopped
+
+    tvheadend:
+        image: lscr.io/linuxserver/tvheadend
+        container_name: tvheadend
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        volumes:
+            - ${BASE_PATH}/tvheadend:/config
+            - recordings:/recordings
+        ports:
+            - 9982:9982
+        devices:
+            - /dev/dvb:/dev/dvb
+        labels:
+            - traefik.http.routers.tv.rule=Host(`tv.${FQDN}`)
+            - traefik.http.routers.tv.tls=true
+            - traefik.http.routers.tv.tls.certresolver=le
+            - traefik.http.routers.tv.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.tv.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.tv.loadbalancer.server.port=9981
+        restart: unless-stopped
+
+    adguard:
+        image: adguard/adguardhome:latest
+        container_name: adguard
+        expose:
+            - 3000
+        volumes:
+            - ${BASE_PATH}/adguard/work:/opt/adguardhome/work
+            - ${BASE_PATH}/adguard/conf:/opt/adguardhome/conf
+        network_mode: host
+        restart: unless-stopped
+
+    ddclient:
+        image: lscr.io/linuxserver/ddclient
+        container_name: ddclient
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        volumes:
+          - ${BASE_PATH}/ddclient:/config
+        restart: unless-stopped
+
+networks:
+    default:
+        driver: bridge
+
+volumes:
+  recordings:
+    driver_opts:
+      type: cifs
+      o: "addr=${SAMBA_IP},username=${SAMBA_USER},password=${SAMBA_PASSWORD},rw,file_mode=0777,dir_mode=0777"
+      device: "//${SAMBA_IP}/Recordings"
