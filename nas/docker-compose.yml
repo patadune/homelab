@@ -1,0 +1,223 @@
+# vi:et
+version: '3'
+
+services:
+    traefik:
+        # The official v2 Traefik docker image
+        image: traefik:v2.5
+        container_name: traefik
+        command:
+            # Enables the web UI and tells Traefik to listen to docker
+            - "--api.dashboard=true"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--entrypoints.web.address=:80"
+            - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+            - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+            - "--entrypoints.websecure.address=:443"
+            - "--certificatesResolvers.le.acme.email=${EMAIL}"
+            - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
+            - "--certificatesResolvers.le.acme.dnsChallenge.provider=ovh"
+            - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=0"
+        ports:
+            - 80:80
+            - 443:443
+        expose:
+            - 8080
+        volumes:
+            # So that Traefik can listen to the Docker events
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ${BASE_PATH}/traefik/:/etc/traefik/
+        environment:
+            - OVH_APPLICATION_KEY
+            - OVH_APPLICATION_SECRET
+            - OVH_CONSUMER_KEY
+            - OVH_ENDPOINT
+        labels:
+            - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
+            - traefik.http.routers.traefik.tls=true
+            - traefik.http.routers.traefik.tls.certresolver=le
+            - traefik.http.routers.traefik.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.traefik.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.traefik.loadbalancer.server.port=8080
+        restart: unless-stopped
+
+    portainer:
+        image: portainer/portainer-ce:latest
+        container_name: portainer
+        expose:
+            - 9000
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ${BASE_PATH}/portainer:/data
+        labels:
+            - traefik.http.routers.portainer.rule=Host(`portainer.${FQDN}`)
+            - traefik.http.routers.portainer.tls=true
+            - traefik.http.routers.portainer.tls.certresolver=le
+            - traefik.http.routers.portainer.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.portainer.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.portainer.loadbalancer.server.port=9000
+        restart: unless-stopped
+
+    sonarr:
+        image: lscr.io/linuxserver/sonarr:latest
+        container_name: sonarr
+        volumes:
+            - ${BASE_PATH}/sonarr:/config
+            - /volume1/Media/TV:/tv
+            - /volume1/Downloads:/downloads
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.sonarr.rule=Host(`sonarr.${FQDN}`)
+            - traefik.http.routers.sonarr.tls=true
+            - traefik.http.routers.sonarr.tls.certresolver=le
+            - traefik.http.routers.sonarr.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.sonarr.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 8989
+        restart: unless-stopped
+
+    bazarr:
+        image: lscr.io/linuxserver/bazarr:latest
+        container_name: bazarr
+        volumes:
+            - ${BASE_PATH}/bazarr:/config
+            - /volume1/Media/Movies:/movies
+            - /volume1/Media/TV:/tv
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.bazarr.rule=Host(`bazarr.${FQDN}`)
+            - traefik.http.routers.bazarr.tls=true
+            - traefik.http.routers.bazarr.tls.certresolver=le
+            - traefik.http.routers.bazarr.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.bazarr.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 6767
+        restart: unless-stopped
+
+    radarr:
+        image: lscr.io/linuxserver/radarr:latest
+        container_name: radarr
+        volumes:
+            - ${BASE_PATH}/radarr:/config
+            - /volume1/Media/Movies:/movies
+            - /volume1/Downloads:/downloads
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.radarr.rule=Host(`radarr.${FQDN}`)
+            - traefik.http.routers.radarr.tls=true
+            - traefik.http.routers.radarr.tls.certresolver=le
+            - traefik.http.routers.radarr.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.radarr.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 7878
+        restart: unless-stopped
+
+    lidarr:
+        image: lscr.io/linuxserver/lidarr:latest
+        container_name: lidarr
+        volumes:
+            - ${BASE_PATH}/lidarr:/config
+            - /volume1/Media/Music:/music
+            - /volume1/Downloads:/downloads
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.lidarr.rule=Host(`lidarr.${FQDN}`)
+            - traefik.http.routers.lidarr.tls=true
+            - traefik.http.routers.lidarr.tls.certresolver=le
+            - traefik.http.routers.lidarr.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.lidarr.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 8686
+        restart: unless-stopped
+
+    qbittorrent:
+        image: lscr.io/linuxserver/qbittorrent:latest
+        container_name: qbittorrent
+        volumes:
+            - ${BASE_PATH}/qbittorrent:/config
+            - /volume1/Downloads:/downloads
+        environment:
+            - PUID
+            - PGID
+            - TZ
+            - UMASK_SET
+        ports:
+            - 6881:6881
+            - 6881:6881/udp
+        labels:
+            - traefik.http.routers.qbittorrent.rule=Host(`torrent.${FQDN}`)
+            - traefik.http.routers.qbittorrent.tls=true
+            - traefik.http.routers.qbittorrent.tls.certresolver=le
+            - traefik.http.routers.qbittorrent.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+        expose:
+            - 8080
+        restart: unless-stopped
+
+    jackett:
+        image: lscr.io/linuxserver/jackett:latest
+        container_name: jackett
+        volumes:
+            - ${BASE_PATH}/jackett:/config
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.jackett.rule=Host(`jackett.${FQDN}`)
+            - traefik.http.routers.jackett.tls=true
+            - traefik.http.routers.jackett.tls.certresolver=le
+            - traefik.http.routers.jackett.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.jackett.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 9117
+        restart: unless-stopped
+
+    tautulli:
+        image: lscr.io/linuxserver/tautulli:latest
+        container_name: tautulli
+        volumes:
+            - ${BASE_PATH}/tautulli:/config
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.tautulli.rule=Host(`tautulli.${FQDN}`)
+            - traefik.http.routers.tautulli.tls=true
+            - traefik.http.routers.tautulli.tls.certresolver=le
+            - traefik.http.routers.tautulli.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.tautulli.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 8181
+        restart: unless-stopped
+
+    home-assistant:
+        image: homeassistant/home-assistant:latest
+        container_name: home-assistant
+        volumes:
+            - ${BASE_PATH}/home-assistant:/config
+        environment:
+            - TZ
+        network_mode: host
+        expose:
+            - 8123
+        restart: unless-stopped
+
+networks:
+    default:
+        driver: bridge
