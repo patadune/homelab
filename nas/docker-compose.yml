@@ -18,7 +18,7 @@ services:
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=ovh"
-            - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=0"
+            - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=10"
         ports:
             - 80:80
             - 443:443
