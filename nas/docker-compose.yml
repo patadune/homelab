@@ -34,6 +34,7 @@ services:
             - OVH_APPLICATION_SECRET
             - OVH_CONSUMER_KEY
             - OVH_ENDPOINT
+            - FQDN
         labels:
             - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
             - traefik.http.routers.traefik.tls=true
