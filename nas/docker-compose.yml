@@ -143,29 +143,38 @@ services:
             - 7878
         restart: unless-stopped
 
-    qbittorrent:
-        image: lscr.io/linuxserver/qbittorrent:latest
-        container_name: qbittorrent
+    qflood:
+        container_name: qflood
+        image: cr.hotio.dev/hotio/qflood
         volumes:
-            - ${BASE_PATH}/qbittorrent:/config
+            - ${BASE_PATH}/qflood:/config
             - /volume1/Downloads:/downloads
         environment:
             - PUID
             - PGID
             - TZ
-            - UMASK_SET
+            - UMASK
         ports:
             - 6881:6881
             - 6881:6881/udp
         labels:
-            - traefik.http.routers.qbittorrent.rule=Host(`torrent.${FQDN}`)
-            - traefik.http.routers.qbittorrent.tls=true
-            - traefik.http.routers.qbittorrent.tls.certresolver=le
-            - traefik.http.routers.qbittorrent.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${FQDN}
-            - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
+            - traefik.http.routers.qbit.rule=Host(`torrent.${FQDN}`)
+            - traefik.http.routers.qbit.service=qbit
+            - traefik.http.routers.qbit.tls=true
+            - traefik.http.routers.qbit.tls.certresolver=le
+            - traefik.http.routers.qbit.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.qbit.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.qbit.loadbalancer.server.port=8080
+            - traefik.http.routers.qflood.rule=Host(`flood.${FQDN}`)
+            - traefik.http.routers.qflood.service=qflood
+            - traefik.http.routers.qflood.tls=true
+            - traefik.http.routers.qflood.tls.certresolver=le
+            - traefik.http.routers.qflood.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.qflood.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.qflood.loadbalancer.server.port=3000
         expose:
             - 8080
+            - 3000
         restart: unless-stopped
 
     tautulli:
