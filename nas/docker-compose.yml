@@ -154,6 +154,7 @@ services:
             - PGID
             - TZ
             - UMASK
+            - FLOOD_AUTH=true
         ports:
             - 6881:6881
             - 6881:6881/udp
