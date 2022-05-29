@@ -194,6 +194,26 @@ services:
             - 8181
         restart: unless-stopped
 
+    calibre-web:
+        image: lscr.io/linuxserver/calibre-web
+        container_name: calibre-web
+        volumes:
+            - ${BASE_PATH}/calibre-web:/config
+            - /volume1/Media/Books:/media/Books
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.http.routers.calibre-web.rule=Host(`calibre.${FQDN}`)
+            - traefik.http.routers.calibre-web.tls=true
+            - traefik.http.routers.calibre-web.tls.certresolver=le
+            - traefik.http.routers.calibre-web.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.calibre-web.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 8083
+        restart: unless-stopped
+
     home-assistant:
         image: homeassistant/home-assistant:latest
         container_name: home-assistant
