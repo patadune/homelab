@@ -85,8 +85,7 @@ services:
         container_name: sonarr
         volumes:
             - ${BASE_PATH}/sonarr:/config
-            - /volume1/Media/TV:/tv
-            - /volume1/Downloads:/downloads
+            - /volume1/Media:/media
         environment:
             - PUID
             - PGID
@@ -106,8 +105,7 @@ services:
         container_name: bazarr
         volumes:
             - ${BASE_PATH}/bazarr:/config
-            - /volume1/Media/Movies:/movies
-            - /volume1/Media/TV:/tv
+            - /volume1/Media:/media
         environment:
             - PUID
             - PGID
@@ -127,8 +125,7 @@ services:
         container_name: radarr
         volumes:
             - ${BASE_PATH}/radarr:/config
-            - /volume1/Media/Movies:/movies
-            - /volume1/Downloads:/downloads
+            - /volume1/Media:/media
         environment:
             - PUID
             - PGID
@@ -148,7 +145,7 @@ services:
         image: cr.hotio.dev/hotio/qflood
         volumes:
             - ${BASE_PATH}/qflood:/config
-            - /volume1/Downloads:/downloads
+            - /volume1/Media/Downloads:/media/Downloads
         environment:
             - PUID
             - PGID
