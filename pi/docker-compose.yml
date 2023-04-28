@@ -93,17 +93,6 @@ services:
         network_mode: host
         restart: unless-stopped
 
-    ddclient:
-        image: lscr.io/linuxserver/ddclient
-        container_name: ddclient
-        environment:
-            - PUID
-            - PGID
-            - TZ
-        volumes:
-          - ${BASE_PATH}/ddclient:/config
-        restart: unless-stopped
-
 networks:
     default:
         driver: bridge
