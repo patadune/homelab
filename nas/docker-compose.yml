@@ -11,7 +11,6 @@ services:
             - "--api.dashboard=true"
             - "--api.insecure=true"
             - "--providers.docker=true"
-            - "--providers.file.filename=/etc/traefik/rules.yaml"
             - "--entrypoints.web.address=:80"
             - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
             - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
