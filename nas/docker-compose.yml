@@ -17,7 +17,7 @@ services:
             - "--entrypoints.websecure.address=:443"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
-            - "--certificatesResolvers.le.acme.dnsChallenge.provider=ovh"
+            - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
             - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=10"
         ports:
             - 80:80
@@ -29,10 +29,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
             - ${BASE_PATH}/traefik/:/etc/traefik/
         environment:
-            - OVH_APPLICATION_KEY
-            - OVH_APPLICATION_SECRET
-            - OVH_CONSUMER_KEY
-            - OVH_ENDPOINT
+            - INFOMANIAK_ACCESS_TOKEN
             - FQDN
         labels:
             - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
