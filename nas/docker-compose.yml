@@ -1,5 +1,5 @@
 # vi:et
-version: '3'
+version: '3.8'
 
 services:
     traefik:
@@ -136,39 +136,29 @@ services:
             - 7878
         restart: unless-stopped
 
-    qflood:
-        container_name: qflood
-        image: cr.hotio.dev/hotio/qflood:release-4.4.3.1--4.7.0
-        volumes:
-            - ${BASE_PATH}/qflood:/config
-            - /volume1/Media/Downloads:/media/Downloads
+    qbittorrent:
+        container_name: qbittorrent
+        image: lscr.io/linuxserver/qbittorrent:latest
         environment:
             - PUID
             - PGID
             - TZ
-            - UMASK
-            - FLOOD_AUTH=true
+            - DOCKER_MODS=arafatamim/linuxserver-io-mod-vuetorrent
+        volumes:
+            - ${BASE_PATH}/qbittorrent:/config
+            - /volume1/Media/Downloads:/media/Downloads
         ports:
             - 6881:6881
             - 6881:6881/udp
         labels:
-            - traefik.http.routers.qbit.rule=Host(`torrent.${FQDN}`)
-            - traefik.http.routers.qbit.service=qbit
-            - traefik.http.routers.qbit.tls=true
-            - traefik.http.routers.qbit.tls.certresolver=le
-            - traefik.http.routers.qbit.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.qbit.tls.domains[0].sans=*.${FQDN}
-            - traefik.http.services.qbit.loadbalancer.server.port=8080
-            - traefik.http.routers.qflood.rule=Host(`flood.${FQDN}`)
-            - traefik.http.routers.qflood.service=qflood
-            - traefik.http.routers.qflood.tls=true
-            - traefik.http.routers.qflood.tls.certresolver=le
-            - traefik.http.routers.qflood.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.qflood.tls.domains[0].sans=*.${FQDN}
-            - traefik.http.services.qflood.loadbalancer.server.port=3000
+            - traefik.http.routers.qbittorrent.rule=Host(`torrent.${FQDN}`)
+            - traefik.http.routers.qbittorrent.tls=true
+            - traefik.http.routers.qbittorrent.tls.certresolver=le
+            - traefik.http.routers.qbittorrent.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
         expose:
             - 8080
-            - 3000
         restart: unless-stopped
 
     tautulli:
