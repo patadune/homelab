@@ -1,5 +1,5 @@
 # vi:et
-version: '3'
+version: '3.8'
 
 services:
     traefik:
@@ -17,22 +17,18 @@ services:
             - "--entrypoints.websecure.address=:443"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
-            - "--certificatesResolvers.le.acme.dnsChallenge.provider=ovh"
+            - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
             - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=10"
         ports:
             - 80:80
             - 443:443
-        environment:
-            - TZ
         volumes:
             # So that Traefik can listen to the Docker events
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - ${BASE_PATH}/traefik:/etc/traefik
         environment:
-            - OVH_APPLICATION_KEY
-            - OVH_APPLICATION_SECRET
-            - OVH_CONSUMER_KEY
-            - OVH_ENDPOINT
+            - INFOMANIAK_ACCESS_TOKEN
+            - FQDN
         labels:
             - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
             - traefik.http.routers.traefik.tls=true
