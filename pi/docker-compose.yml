@@ -81,12 +81,19 @@ services:
     adguard:
         image: adguard/adguardhome:latest
         container_name: adguard
-        expose:
-            - 3000
+        ports:
+            - 53:53
+            - 53:53/udp
         volumes:
             - ${BASE_PATH}/adguard/work:/opt/adguardhome/work
             - ${BASE_PATH}/adguard/conf:/opt/adguardhome/conf
-        network_mode: host
+        labels:
+            - traefik.http.routers.adguard.rule=Host(`adguard.${FQDN}`)
+            - traefik.http.routers.adguard.tls=true
+            - traefik.http.routers.adguard.tls.certresolver=le
+            - traefik.http.routers.adguard.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.adguard.tls.domains[0].sans=*.${FQDN}
+            - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
 
 networks:
