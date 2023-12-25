@@ -3,8 +3,7 @@ version: '3.8'
 
 services:
     traefik:
-        # The official v2 Traefik docker image
-        image: traefik:v2.5
+        image: traefik:latest
         container_name: traefik
         command:
             # Enables the web UI and tells Traefik to listen to docker
@@ -210,6 +209,40 @@ services:
         network_mode: host
         expose:
             - 8123
+        restart: unless-stopped
+
+    redis:
+        image: docker.io/library/redis:7
+        container_name: redis
+        restart: unless-stopped
+        volumes:
+            - ${BASE_PATH}/redis:/data
+
+    paperless:
+        image: ghcr.io/paperless-ngx/paperless-ngx:latest
+        container_name: paperless
+        depends_on:
+            - redis
+        volumes:
+            - ${BASE_PATH}/paperless/data:/usr/src/paperless/data
+            - ${BASE_PATH}/paperless/media:/usr/src/paperless/media
+            - ${BASE_PATH}/paperless/export:/usr/src/paperless/export
+            - ${BASE_PATH}/paperless/consume:/usr/src/paperless/consume
+        environment:
+            - PAPERLESS_REDIS
+            - USERMAP_UID
+            - USERMAP_GID
+            - PAPERLESS_URL
+            - PAPERLESS_TIME_ZONE
+            - PAPERLESS_OCR_LANGUAGE
+        labels:
+            - traefik.http.routers.paperless.rule=Host(`paperless.${FQDN}`)
+            - traefik.http.routers.paperless.tls=true
+            - traefik.http.routers.paperless.tls.certresolver=le
+            - traefik.http.routers.paperless.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.paperless.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 8000
         restart: unless-stopped
 
 networks:

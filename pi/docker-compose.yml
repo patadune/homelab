@@ -3,8 +3,7 @@ version: '3.8'
 
 services:
     traefik:
-        # The official v2 Traefik docker image
-        image: traefik:v2.5
+        image: traefik:latest
         container_name: traefik
         command:
             # Enables the web UI and tells Traefik to listen to docker
