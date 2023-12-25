@@ -81,7 +81,6 @@ services:
         image: adguard/adguardhome:latest
         container_name: adguard
         ports:
-            - 53:53
             - 53:53/udp
         volumes:
             - ${BASE_PATH}/adguard/work:/opt/adguardhome/work
