@@ -55,7 +55,7 @@ services:
         restart: unless-stopped
 
     tvheadend:
-        image: lscr.io/linuxserver/tvheadend:version-b1005850
+        image: lscr.io/linuxserver/tvheadend:latest
         container_name: tvheadend
         environment:
             - PUID
