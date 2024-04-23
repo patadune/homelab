@@ -94,6 +94,21 @@ services:
             - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
 
+    uptime-kuma:
+        image: louislam/uptime-kuma:1.23.12
+        container_name: uptime-kuma
+        volumes:
+            - ${BASE_PATH}/uptime-kuma:/app/data
+        labels:
+            - traefik.http.routers.uptime-kuma.rule=Host(`uptime.${FQDN}`)
+            - traefik.http.routers.uptime-kuma.tls=true
+            - traefik.http.routers.uptime-kuma.tls.certresolver=le
+            - traefik.http.routers.uptime-kuma.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.uptime-kuma.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 3001
+        restart: unless-stopped
+
 networks:
     default:
         driver: bridge
