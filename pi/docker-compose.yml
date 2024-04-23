@@ -114,5 +114,5 @@ volumes:
   recordings:
     driver_opts:
       type: cifs
-      o: "addr=${SAMBA_IP},username=${SAMBA_USER},password=${SAMBA_PASSWORD},rw,file_mode=0777,dir_mode=0777"
+      o: "ip=${SAMBA_IP},username=${SAMBA_USER},password=${SAMBA_PASSWORD},uid=${PUID},gid=${PGID},vers=3.0"
       device: "//${SAMBA_IP}/Recordings"
