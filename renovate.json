@@ -6,7 +6,13 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "lscr.io/linuxserver/calibre-web",
+        "lscr.io/linuxserver/calibre-web"
+      ],
+      "allowedVersions": "/^(?<major>0)\\.(?<minor>\\d+)\\.(?<fix>\\d+)$/"
+    },
+    {
+      "matchPackageNames": [
+        "lscr.io/linuxserver/tautulli",
         "lscr.io/linuxserver/qbittorrent"
       ],
       "allowedVersions": "/^(?<major>\\d{1})\\.(?<minor>\\d+)\\.(?<fix>\\d+)$/"
