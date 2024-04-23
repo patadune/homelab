@@ -139,7 +139,7 @@ services:
             - PUID
             - PGID
             - TZ
-            - DOCKER_MODS=arafatamim/linuxserver-io-mod-vuetorrent
+            - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
         volumes:
             - ${BASE_PATH}/qbittorrent:/config
             - /volume1/Media/Downloads:/media/Downloads
