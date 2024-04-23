@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
     traefik:
-        image: traefik:latest
+        image: traefik:2.11.2
         container_name: traefik
         command:
             # Enables the web UI and tells Traefik to listen to docker
@@ -38,7 +38,7 @@ services:
         restart: unless-stopped
 
     portainer:
-        image: portainer/portainer-ce:latest
+        image: portainer/portainer-ce:2.19.5
         container_name: portainer
         environment:
             - TZ
@@ -55,7 +55,7 @@ services:
         restart: unless-stopped
 
     tvheadend:
-        image: lscr.io/linuxserver/tvheadend
+        image: lscr.io/linuxserver/tvheadend:version-b1005850
         container_name: tvheadend
         environment:
             - PUID
@@ -78,7 +78,7 @@ services:
         restart: unless-stopped
 
     adguard:
-        image: adguard/adguardhome:latest
+        image: adguard/adguardhome:v0.107.48
         container_name: adguard
         ports:
             - 53:53/udp
