@@ -245,6 +245,21 @@ services:
             - 8000
         restart: unless-stopped
 
+    actual_server:
+        image: ghcr.io/actualbudget/actual-server:24.4.0
+        container_name: actual
+        volumes:
+            - ${BASE_PATH}/actual:/data
+        labels:
+            - traefik.http.routers.actual.rule=Host(`actual.${FQDN}`)
+            - traefik.http.routers.actual.tls=true
+            - traefik.http.routers.actual.tls.certresolver=le
+            - traefik.http.routers.actual.tls.domains[0].main=${FQDN}
+            - traefik.http.routers.actual.tls.domains[0].sans=*.${FQDN}
+        expose:
+            - 5006
+        restart: unless-stopped
+
     adguard:
         image: adguard/adguardhome:v0.107.48
         container_name: adguard
