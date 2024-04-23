@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
     traefik:
-        image: traefik:latest
+        image: traefik:2.11.2
         container_name: traefik
         command:
             # Enables the web UI and tells Traefik to listen to docker
@@ -40,7 +40,7 @@ services:
         restart: unless-stopped
 
     portainer:
-        image: portainer/portainer-ce:latest
+        image: portainer/portainer-ce:2.19.5
         container_name: portainer
         expose:
             - 9000
@@ -57,7 +57,7 @@ services:
         restart: unless-stopped
 
     prowlarr:
-        image: lscr.io/linuxserver/prowlarr:latest
+        image: lscr.io/linuxserver/prowlarr:1.16.2
         container_name: prowlarr
         volumes:
             - ${BASE_PATH}/prowlarr:/config
@@ -76,7 +76,7 @@ services:
         restart: unless-stopped
 
     sonarr:
-        image: lscr.io/linuxserver/sonarr:latest
+        image: lscr.io/linuxserver/sonarr:4.0.4
         container_name: sonarr
         volumes:
             - ${BASE_PATH}/sonarr:/config
@@ -96,7 +96,7 @@ services:
         restart: unless-stopped
 
     bazarr:
-        image: lscr.io/linuxserver/bazarr:latest
+        image: lscr.io/linuxserver/bazarr:1.4.2
         container_name: bazarr
         volumes:
             - ${BASE_PATH}/bazarr:/config
@@ -116,7 +116,7 @@ services:
         restart: unless-stopped
 
     radarr:
-        image: lscr.io/linuxserver/radarr:latest
+        image: lscr.io/linuxserver/radarr:5.4.6
         container_name: radarr
         volumes:
             - ${BASE_PATH}/radarr:/config
@@ -137,7 +137,7 @@ services:
 
     qbittorrent:
         container_name: qbittorrent
-        image: lscr.io/linuxserver/qbittorrent:latest
+        image: lscr.io/linuxserver/qbittorrent:4.6.4
         environment:
             - PUID
             - PGID
@@ -161,7 +161,7 @@ services:
         restart: unless-stopped
 
     tautulli:
-        image: lscr.io/linuxserver/tautulli:latest
+        image: lscr.io/linuxserver/tautulli:2.13.4
         container_name: tautulli
         volumes:
             - ${BASE_PATH}/tautulli:/config
@@ -180,7 +180,7 @@ services:
         restart: unless-stopped
 
     calibre-web:
-        image: lscr.io/linuxserver/calibre-web
+        image: lscr.io/linuxserver/calibre-web:0.6.21
         container_name: calibre-web
         volumes:
             - ${BASE_PATH}/calibre-web:/config
@@ -200,7 +200,7 @@ services:
         restart: unless-stopped
 
     home-assistant:
-        image: homeassistant/home-assistant:latest
+        image: homeassistant/home-assistant:2024.4
         container_name: home-assistant
         volumes:
             - ${BASE_PATH}/home-assistant:/config
@@ -219,7 +219,7 @@ services:
             - ${BASE_PATH}/redis:/data
 
     paperless:
-        image: ghcr.io/paperless-ngx/paperless-ngx:latest
+        image: ghcr.io/paperless-ngx/paperless-ngx:2.7.2
         container_name: paperless
         depends_on:
             - redis
@@ -246,7 +246,7 @@ services:
         restart: unless-stopped
 
     adguard:
-        image: adguard/adguardhome:latest
+        image: adguard/adguardhome:v0.107.48
         container_name: adguard
         ports:
             - 53:53/udp
