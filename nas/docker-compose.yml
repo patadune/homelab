@@ -209,7 +209,7 @@ services:
         restart: unless-stopped
 
     redis:
-        image: docker.io/library/redis:7
+        image: redis:7.2.4
         container_name: redis
         restart: unless-stopped
         volumes:
