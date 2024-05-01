@@ -197,7 +197,7 @@ services:
         restart: unless-stopped
 
     home-assistant:
-        image: homeassistant/home-assistant:2024.4
+        image: homeassistant/home-assistant:2024.5
         container_name: home-assistant
         volumes:
             - ${BASE_PATH}/home-assistant:/config
