@@ -132,6 +132,16 @@ services:
             - 7878
         restart: unless-stopped
 
+    recyclarr:
+        container_name: recyclarr
+        image: ghcr.io/recyclarr/recyclarr:6.0.2
+        user: ${PUID}:${PGID}
+        environment:
+            - TZ
+        volumes:
+            - ${BASE_PATH}/recyclarr:/config
+        restart: unless-stopped
+
     qbittorrent:
         container_name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:4.6.4
