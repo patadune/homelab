@@ -226,7 +226,7 @@ services:
             - ${BASE_PATH}/redis:/data
 
     paperless:
-        image: ghcr.io/paperless-ngx/paperless-ngx:2.8.3
+        image: ghcr.io/paperless-ngx/paperless-ngx:2.8.4
         container_name: paperless
         depends_on:
             - redis
