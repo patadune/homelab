@@ -37,7 +37,7 @@ services:
         restart: unless-stopped
 
     portainer:
-        image: portainer/portainer-ce:2.20.2
+        image: portainer/portainer-ce:2.20.3
         container_name: portainer
         expose:
             - 9000
