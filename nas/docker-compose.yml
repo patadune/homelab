@@ -253,7 +253,7 @@ services:
         restart: unless-stopped
 
     actual_server:
-        image: ghcr.io/actualbudget/actual-server:24.5.0
+        image: ghcr.io/actualbudget/actual-server:24.6.0
         container_name: actual
         volumes:
             - ${BASE_PATH}/actual:/data
