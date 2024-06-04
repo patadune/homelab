@@ -51,29 +51,6 @@ services:
             - traefik.http.services.portainer.loadbalancer.server.port=9000
         restart: unless-stopped
 
-    tvheadend:
-        image: lscr.io/linuxserver/tvheadend:latest
-        container_name: tvheadend
-        environment:
-            - PUID
-            - PGID
-            - TZ
-        volumes:
-            - ${BASE_PATH}/tvheadend:/config
-            - recordings:/recordings
-        ports:
-            - 9982:9982
-        devices:
-            - /dev/dvb:/dev/dvb
-        labels:
-            - traefik.http.routers.tv.rule=Host(`tv.${FQDN}`)
-            - traefik.http.routers.tv.tls=true
-            - traefik.http.routers.tv.tls.certresolver=le
-            - traefik.http.routers.tv.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.tv.tls.domains[0].sans=*.${FQDN}
-            - traefik.http.services.tv.loadbalancer.server.port=9981
-        restart: unless-stopped
-
     adguard:
         image: adguard/adguardhome:v0.107.50
         container_name: adguard
@@ -109,10 +86,3 @@ services:
 networks:
     default:
         driver: bridge
-
-volumes:
-  recordings:
-    driver_opts:
-      type: cifs
-      o: "ip=${SAMBA_IP},username=${SAMBA_USER},password=${SAMBA_PASSWORD},uid=${PUID},gid=${PGID},vers=3.0"
-      device: "//${SAMBA_IP}/Recordings"
