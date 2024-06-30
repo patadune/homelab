@@ -113,7 +113,7 @@ services:
         restart: unless-stopped
 
     radarr:
-        image: lscr.io/linuxserver/radarr:5.7.0
+        image: lscr.io/linuxserver/radarr:0.0.5580
         container_name: radarr
         volumes:
             - ${BASE_PATH}/radarr:/config
