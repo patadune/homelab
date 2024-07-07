@@ -187,7 +187,7 @@ services:
         restart: unless-stopped
 
     calibre-web:
-        image: lscr.io/linuxserver/calibre-web:0.6.21
+        image: lscr.io/linuxserver/calibre-web:0.6.22
         container_name: calibre-web
         volumes:
             - ${BASE_PATH}/calibre-web:/config
