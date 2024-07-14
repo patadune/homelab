@@ -3,14 +3,19 @@ services:
         image: traefik:v3.0.4
         container_name: traefik
         command:
-            # Enables the web UI and tells Traefik to listen to docker
+            - "--log.level=DEBUG"
             - "--api.dashboard=true"
             - "--api.insecure=true"
             - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
             - "--entrypoints.web.address=:80"
             - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
             - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
             - "--entrypoints.websecure.address=:443"
+            - "--entrypoints.websecure.http.tls=true"
+            - "--entrypoints.websecure.http.tls.certResolver=le"
+            - "--entrypoints.websecure.http.tls.domains[0].main=${FQDN}"
+            - "--entrypoints.websecure.http.tls.domains[0].sans=*.${FQDN}"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
@@ -28,11 +33,9 @@ services:
             - INFOMANIAK_ACCESS_TOKEN
             - FQDN
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.traefik.entryPoints=websecure
             - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
-            - traefik.http.routers.traefik.tls=true
-            - traefik.http.routers.traefik.tls.certresolver=le
-            - traefik.http.routers.traefik.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.traefik.tls.domains[0].sans=*.${FQDN}
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
@@ -45,11 +48,9 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - ${BASE_PATH}/portainer:/data
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.portainer.entryPoints=websecure
             - traefik.http.routers.portainer.rule=Host(`portainer.${FQDN}`)
-            - traefik.http.routers.portainer.tls=true
-            - traefik.http.routers.portainer.tls.certresolver=le
-            - traefik.http.routers.portainer.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.portainer.tls.domains[0].sans=*.${FQDN}
             - traefik.http.services.portainer.loadbalancer.server.port=9000
         restart: unless-stopped
 
@@ -63,11 +64,9 @@ services:
             - PGID
             - TZ
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.prowlarr.entryPoints=websecure
             - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${FQDN}`)
-            - traefik.http.routers.prowlarr.tls=true
-            - traefik.http.routers.prowlarr.tls.certresolver=le
-            - traefik.http.routers.prowlarr.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.prowlarr.tls.domains[0].sans=*.${FQDN}
         expose:
             - 9696
         restart: unless-stopped
@@ -83,11 +82,9 @@ services:
             - PGID
             - TZ
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.sonarr.entryPoints=websecure
             - traefik.http.routers.sonarr.rule=Host(`sonarr.${FQDN}`)
-            - traefik.http.routers.sonarr.tls=true
-            - traefik.http.routers.sonarr.tls.certresolver=le
-            - traefik.http.routers.sonarr.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.sonarr.tls.domains[0].sans=*.${FQDN}
         expose:
             - 8989
         restart: unless-stopped
@@ -103,11 +100,9 @@ services:
             - PGID
             - TZ
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.bazarr.entryPoints=websecure
             - traefik.http.routers.bazarr.rule=Host(`bazarr.${FQDN}`)
-            - traefik.http.routers.bazarr.tls=true
-            - traefik.http.routers.bazarr.tls.certresolver=le
-            - traefik.http.routers.bazarr.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.bazarr.tls.domains[0].sans=*.${FQDN}
         expose:
             - 6767
         restart: unless-stopped
@@ -123,11 +118,9 @@ services:
             - PGID
             - TZ
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.radarr.entryPoints=websecure
             - traefik.http.routers.radarr.rule=Host(`radarr.${FQDN}`)
-            - traefik.http.routers.radarr.tls=true
-            - traefik.http.routers.radarr.tls.certresolver=le
-            - traefik.http.routers.radarr.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.radarr.tls.domains[0].sans=*.${FQDN}
         expose:
             - 7878
         restart: unless-stopped
@@ -157,11 +150,9 @@ services:
             - 6881:6881
             - 6881:6881/udp
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.qbittorrent.entryPoints=websecure
             - traefik.http.routers.qbittorrent.rule=Host(`torrent.${FQDN}`)
-            - traefik.http.routers.qbittorrent.tls=true
-            - traefik.http.routers.qbittorrent.tls.certresolver=le
-            - traefik.http.routers.qbittorrent.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${FQDN}
             - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
         expose:
             - 8080
@@ -177,11 +168,9 @@ services:
             - PGID
             - TZ
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.tautulli.entryPoints=websecure
             - traefik.http.routers.tautulli.rule=Host(`tautulli.${FQDN}`)
-            - traefik.http.routers.tautulli.tls=true
-            - traefik.http.routers.tautulli.tls.certresolver=le
-            - traefik.http.routers.tautulli.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.tautulli.tls.domains[0].sans=*.${FQDN}
         expose:
             - 8181
         restart: unless-stopped
@@ -197,11 +186,9 @@ services:
             - PGID
             - TZ
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.calibre-web.entryPoints=websecure
             - traefik.http.routers.calibre-web.rule=Host(`calibre.${FQDN}`)
-            - traefik.http.routers.calibre-web.tls=true
-            - traefik.http.routers.calibre-web.tls.certresolver=le
-            - traefik.http.routers.calibre-web.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.calibre-web.tls.domains[0].sans=*.${FQDN}
         expose:
             - 8083
         restart: unless-stopped
@@ -243,11 +230,9 @@ services:
             - PAPERLESS_TIME_ZONE
             - PAPERLESS_OCR_LANGUAGE
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.paperless.entryPoints=websecure
             - traefik.http.routers.paperless.rule=Host(`paperless.${FQDN}`)
-            - traefik.http.routers.paperless.tls=true
-            - traefik.http.routers.paperless.tls.certresolver=le
-            - traefik.http.routers.paperless.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.paperless.tls.domains[0].sans=*.${FQDN}
         expose:
             - 8000
         restart: unless-stopped
@@ -258,11 +243,9 @@ services:
         volumes:
             - ${BASE_PATH}/actual:/data
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.actual.entryPoints=websecure
             - traefik.http.routers.actual.rule=Host(`actual.${FQDN}`)
-            - traefik.http.routers.actual.tls=true
-            - traefik.http.routers.actual.tls.certresolver=le
-            - traefik.http.routers.actual.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.actual.tls.domains[0].sans=*.${FQDN}
         expose:
             - 5006
         restart: unless-stopped
@@ -276,11 +259,9 @@ services:
             - ${BASE_PATH}/adguard/work:/opt/adguardhome/work
             - ${BASE_PATH}/adguard/conf:/opt/adguardhome/conf
         labels:
+            - traefik.enable=true
+            - traefik.http.routers.adguard.entryPoints=websecure
             - traefik.http.routers.adguard.rule=Host(`adguard.${FQDN}`)
-            - traefik.http.routers.adguard.tls=true
-            - traefik.http.routers.adguard.tls.certresolver=le
-            - traefik.http.routers.adguard.tls.domains[0].main=${FQDN}
-            - traefik.http.routers.adguard.tls.domains[0].sans=*.${FQDN}
             - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
 
