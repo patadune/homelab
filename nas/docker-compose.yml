@@ -175,23 +175,29 @@ services:
             - 8181
         restart: unless-stopped
 
-    calibre-web:
-        image: lscr.io/linuxserver/calibre-web:0.6.23
-        container_name: calibre-web
-        volumes:
-            - ${BASE_PATH}/calibre-web:/config
-            - /volume1/Media/Books:/media/Books
+    calibre:
+        image: linuxserver/calibre:7.17.0
+        container_name: calibre
+        restart: unless-stopped
         environment:
-            - PUID
-            - PGID
-            - TZ
+            - TZ # Specify a timezone to use e.g. Europe/London.
+            - PUID # UID of user to take ownership of application/files
+            - PGID # GID of user to take ownership of application/files
+            - GUAC_USER # Username for the calibre desktop gui. (Optional)
+            - GUAC_PASS # Password's md5 hash for the calibre desktop gui. (Optional)
+        volumes:
+            - ${BASE_PATH}/calibre:/config
+            - /volume1/Media/Books:/media/Books
         labels:
             - traefik.enable=true
-            - traefik.http.routers.calibre-web.entryPoints=websecure
-            - traefik.http.routers.calibre-web.rule=Host(`calibre.${FQDN}`)
-        expose:
-            - 8083
-        restart: unless-stopped
+            - traefik.http.routers.calibre.entryPoints=websecure
+            - traefik.http.routers.calibre.rule=Host(`calibre.${FQDN}`)
+            - traefik.http.routers.calibre.service=calibre
+            - traefik.http.services.calibre.loadbalancer.server.port=8080
+            - traefik.http.routers.opds.entryPoints=websecure
+            - traefik.http.routers.opds.rule=Host(`opds.${FQDN}`)
+            - traefik.http.routers.opds.service=opds
+            - traefik.http.services.opds.loadbalancer.server.port=8081
 
     home-assistant:
         image: homeassistant/home-assistant:2024.8
