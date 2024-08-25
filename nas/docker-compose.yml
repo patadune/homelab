@@ -180,11 +180,11 @@ services:
         container_name: calibre
         restart: unless-stopped
         environment:
-            - TZ # Specify a timezone to use e.g. Europe/London.
-            - PUID # UID of user to take ownership of application/files
-            - PGID # GID of user to take ownership of application/files
-            - GUAC_USER # Username for the calibre desktop gui. (Optional)
-            - GUAC_PASS # Password's md5 hash for the calibre desktop gui. (Optional)
+            - TZ
+            - PUID
+            - PGID
+            - CUSTOM_USER
+            - PASSWORD
         volumes:
             - ${BASE_PATH}/calibre:/config
             - /volume1/Media/Books:/media/Books
