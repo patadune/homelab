@@ -194,10 +194,10 @@ services:
             - traefik.http.routers.calibre.rule=Host(`calibre.${FQDN}`)
             - traefik.http.routers.calibre.service=calibre
             - traefik.http.services.calibre.loadbalancer.server.port=8080
-            - traefik.http.routers.opds.entryPoints=websecure
-            - traefik.http.routers.opds.rule=Host(`opds.${FQDN}`)
-            - traefik.http.routers.opds.service=opds
-            - traefik.http.services.opds.loadbalancer.server.port=8081
+            - traefik.http.routers.books.entryPoints=websecure
+            - traefik.http.routers.books.rule=Host(`books.${FQDN}`)
+            - traefik.http.routers.books.service=books
+            - traefik.http.services.books.loadbalancer.server.port=8081
 
     home-assistant:
         image: homeassistant/home-assistant:2024.8
