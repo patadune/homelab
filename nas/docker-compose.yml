@@ -40,7 +40,7 @@ services:
         restart: unless-stopped
 
     portainer:
-        image: portainer/portainer-ce:2.21.0
+        image: portainer/portainer-ce:2.21.1-alpine
         container_name: portainer
         expose:
             - 9000
@@ -230,7 +230,7 @@ services:
         restart: unless-stopped
 
     paperless-valkey:
-        image: valkey/valkey:7.2.6
+        image: valkey/valkey:7.2.6-alpine
         container_name: paperless-valkey
         restart: unless-stopped
         volumes:
@@ -262,7 +262,7 @@ services:
         restart: unless-stopped
 
     actual_server:
-        image: ghcr.io/actualbudget/actual-server:24.9.0
+        image: ghcr.io/actualbudget/actual-server:24.9.0-alpine
         container_name: actual-server
         volumes:
             - ${BASE_PATH}/actual:/data
