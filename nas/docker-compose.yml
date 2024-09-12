@@ -263,7 +263,7 @@ services:
 
     actual_server:
         image: ghcr.io/actualbudget/actual-server:24.9.0
-        container_name: actual
+        container_name: actual-server
         volumes:
             - ${BASE_PATH}/actual:/data
         labels:
