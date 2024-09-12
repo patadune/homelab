@@ -229,18 +229,18 @@ services:
             - 8123
         restart: unless-stopped
 
-    redis:
-        image: redis:7.2.4
-        container_name: redis
+    paperless-valkey:
+        image: valkey/valkey:7.2.6
+        container_name: paperless-valkey
         restart: unless-stopped
         volumes:
-            - ${BASE_PATH}/redis:/data
+            - ${BASE_PATH}/valkey:/data
 
     paperless:
         image: ghcr.io/paperless-ngx/paperless-ngx:2.11.6
         container_name: paperless
         depends_on:
-            - redis
+            - paperless-valkey
         volumes:
             - ${BASE_PATH}/paperless/data:/usr/src/paperless/data
             - ${BASE_PATH}/paperless/media:/usr/src/paperless/media
