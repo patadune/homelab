@@ -289,6 +289,65 @@ services:
             - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
 
+    immich-server:
+        container_name: immich_server
+        image: ghcr.io/immich-app/immich-server:v1.115.0
+        volumes:
+            - /volume1/Archive/Photos:/usr/src/app/upload
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.immich.entryPoints=websecure
+            - traefik.http.routers.immich.rule=Host(`immich.${FQDN}`)
+            - traefik.http.services.immich.loadbalancer.server.port=3001
+        environment:
+            - REDIS_HOSTNAME
+            - DB_HOSTNAME
+            - DB_USERNAME
+            - DB_PASSWORD
+            - DB_DATABASE_NAME
+            - TZ
+        depends_on:
+            - immich-redis
+            - immich-db
+        restart: unless-stopped
+
+    immich-machine-learning:
+        container_name: immich_machine_learning
+        image: ghcr.io/immich-app/immich-machine-learning:v1.115.0
+        volumes:
+            - model-cache:/cache
+        environment:
+            - DB_USERNAME
+            - DB_PASSWORD
+            - DB_DATABASE_NAME
+            - TZ
+        restart: unless-stopped
+        healthcheck:
+            disable: false
+
+    immich-redis:
+        container_name: immich_redis
+        image: redis:6.2-alpine
+        healthcheck:
+            test: redis-cli ping || exit 1
+        restart: unless-stopped
+
+    immich-db:
+        container_name: immich_postgres
+        image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0
+        environment:
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_DB: ${DB_DATABASE_NAME}
+            POSTGRES_INITDB_ARGS: '--data-checksums'
+        volumes:
+            - ${BASE_PATH}/immich-db:/var/lib/postgresql/data
+        command: ["postgres", "-c", "shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
+        restart: unless-stopped
+
+volumes:
+    model-cache:
+
 networks:
     default:
         driver: bridge
