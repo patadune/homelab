@@ -306,6 +306,8 @@ services:
             - DB_PASSWORD
             - DB_DATABASE_NAME
             - TZ
+        devices:
+            - /dev/dri:/dev/dri
         depends_on:
             - immich-redis
             - immich-db
