@@ -194,7 +194,7 @@ services:
         restart: unless-stopped
 
     calibre:
-        image: linuxserver/calibre:7.18.0
+        image: linuxserver/calibre:7.19.0
         container_name: calibre
         restart: unless-stopped
         environment:
