@@ -23,6 +23,8 @@ services:
         ports:
             - 80:80
             - 443:443
+        expose:
+            - 8080
         volumes:
             # So that Traefik can listen to the Docker events
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -68,7 +70,7 @@ services:
             - /dev/dvb:/dev/dvb
         labels:
             - traefik.enable=true
-            - traefik.http.routers.traefik.entryPoints=websecure
+            - traefik.http.routers.tv.entryPoints=websecure
             - traefik.http.routers.tv.rule=Host(`tv.${FQDN}`)
             - traefik.http.services.tv.loadbalancer.server.port=9981
         restart: unless-stopped
