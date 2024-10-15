@@ -291,14 +291,14 @@ services:
 
     immich-server:
         container_name: immich_server
-        image: ghcr.io/immich-app/immich-server:v1.117.0
+        image: ghcr.io/immich-app/immich-server:v1.118.2
         volumes:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
             - traefik.enable=true
             - traefik.http.routers.immich.entryPoints=websecure
             - traefik.http.routers.immich.rule=Host(`immich.${FQDN}`)
-            - traefik.http.services.immich.loadbalancer.server.port=3001
+            - traefik.http.services.immich.loadbalancer.server.port=2283
         environment:
             - REDIS_HOSTNAME
             - DB_HOSTNAME
@@ -315,7 +315,7 @@ services:
 
     immich-machine-learning:
         container_name: immich_machine_learning
-        image: ghcr.io/immich-app/immich-machine-learning:v1.117.0
+        image: ghcr.io/immich-app/immich-machine-learning:v1.118.2
         volumes:
             - model-cache:/cache
         environment:
