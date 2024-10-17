@@ -347,6 +347,90 @@ services:
         command: ["postgres", "-c", "shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
         restart: unless-stopped
 
+    authentik-db:
+        container_name: authentik_db
+        image: postgres:16.4-alpine
+        restart: unless-stopped
+        volumes:
+            - ${BASE_PATH}/authentik-db:/var/lib/postgresql/data
+        environment:
+          POSTGRES_USER: ${AUTHENTIK_DB_USERNAME}
+          POSTGRES_PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+          POSTGRES_DB: ${AUTHENTIK_DB_DATABASE_NAME}
+
+    authentik-valkey:
+        container_name: authentik_valkey
+        image: valkey/valkey:7.2.7-alpine
+        restart: unless-stopped
+        volumes:
+            - ${BASE_PATH}/authentik-valkey:/data
+
+    authentik-server:
+        container_name: authentik_server
+        image: ghcr.io/goauthentik/server:2024.8.3
+        user: ${PUID}:${PGID}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.authentik.entryPoints=websecure
+            - traefik.http.routers.authentik.rule=Host(`auth.${FQDN}`)
+            - traefik.http.services.authentik.loadbalancer.server.port=9000
+        environment:
+            AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+            AUTHENTIK_REDIS__HOST: authentik-valkey
+            AUTHENTIK_POSTGRESQL__HOST: authentik-db
+            AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_DB_USERNAME}
+            AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+            AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_DB_DATABASE_NAME}
+        volumes:
+            - ${BASE_PATH}/authentik-server/media:/media
+            - ${BASE_PATH}/authentik-server/templates:/templates
+        command: server
+        depends_on:
+            - authentik-valkey
+            - authentik-db
+        restart: unless-stopped
+
+    authentik-worker:
+        container_name: authentik_worker
+        image: ghcr.io/goauthentik/server:2024.8.3
+        user: ${PUID}:${PGID}
+        environment:
+            AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+            AUTHENTIK_REDIS__HOST: authentik-valkey
+            AUTHENTIK_POSTGRESQL__HOST: authentik-db
+            AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_DB_USERNAME}
+            AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_DB_PASSWORD}
+            AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_DB_DATABASE_NAME}
+        volumes:
+            - ${BASE_PATH}/authentik-server/media:/media
+            - ${BASE_PATH}/authentik-server/certs:/certs
+            - ${BASE_PATH}/authentik-server/templates:/templates
+        command: worker
+        depends_on:
+            - authentik-valkey
+            - authentik-db
+        restart: unless-stopped
+
+    authentik-proxy:
+        container_name: authentik_proxy
+        image: ghcr.io/goauthentik/proxy:2024.8.3
+        ports:
+            - 9000:9000
+        environment:
+            AUTHENTIK_HOST: https://auth.${FQDN}
+            AUTHENTIK_INSECURE: "false"
+            AUTHENTIK_TOKEN: ${AUTHENTIK_TOKEN}
+        labels:
+            traefik.enable: true
+            traefik.http.routers.authentik_proxy.entryPoints: websecure
+            traefik.http.routers.authentik-proxy.rule: Host(`auth.${FQDN}`) && PathPrefix(`/outpost.goauthentik.io/`)
+            traefik.http.routers.authentik_proxy.port: 9000
+            # `authentik-proxy` refers to the service name in the compose file.
+            traefik.http.middlewares.authentik.forwardauth.address: http://authentik-proxy:9000/outpost.goauthentik.io/auth/traefik
+            traefik.http.middlewares.authentik.forwardauth.trustForwardHeader: true
+            traefik.http.middlewares.authentik.forwardauth.authResponseHeaders: X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid,X-authentik-jwt,X-authentik-meta-jwks,X-authentik-meta-outpost,X-authentik-meta-provider,X-authentik-meta-app,X-authentik-meta-version
+        restart: unless-stopped
+
 volumes:
     model-cache:
 
