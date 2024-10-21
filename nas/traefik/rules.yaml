@@ -1,0 +1,14 @@
+http:
+  routers:
+    dsm:
+      entryPoints:
+        - websecure
+      rule: "Host(`dsm.{{env "FQDN"}}`)"
+      service: dsm
+      tls:
+        certResolver: le
+  services:
+    dsm:
+      loadBalancer:
+        servers:
+        - url: "http://localhost:12680"
