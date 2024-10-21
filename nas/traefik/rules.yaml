@@ -1,0 +1,12 @@
+http:
+  routers:
+    dsm:
+      entryPoints:
+        - websecure
+      rule: "Host(`{{env "WEB_DOMAIN"}}`)"
+      service: dsm
+  services:
+    dsm:
+      loadBalancer:
+        servers:
+        - url: "http://{{env "FQDN"}}:5000"

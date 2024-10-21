@@ -8,6 +8,7 @@ services:
             - "--api.insecure=true"
             - "--providers.docker=true"
             - "--providers.docker.exposedbydefault=false"
+            - "--providers.file.filename=/etc/traefik/rules.yaml"
             - "--entrypoints.lan.address=:80"
             - "--entryPoints.lan.http.redirections.entryPoint.to=lansecure"
             - "--entryPoints.lan.http.redirections.entryPoint.scheme=https"
@@ -16,6 +17,11 @@ services:
             - "--entrypoints.lansecure.http.tls.certResolver=le"
             - "--entrypoints.lansecure.http.tls.domains[0].main=${FQDN}"
             - "--entrypoints.lansecure.http.tls.domains[0].sans=*.${FQDN}"
+            - "--entrypoints.websecure.address=:13443"
+            - "--entrypoints.websecure.http.tls=true"
+            - "--entrypoints.websecure.http.tls.certResolver=le"
+            - "--entrypoints.websecure.http.tls.domains[0].main=${WEB_DOMAIN}"
+            - "--entrypoints.websecure.http.tls.domains[0].sans=*.${WEB_DOMAIN}"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
@@ -23,6 +29,7 @@ services:
         ports:
             - 80:80
             - 443:443
+            - 13443:13443
         expose:
             - 8080
         volumes:
@@ -31,6 +38,7 @@ services:
             - ${BASE_PATH}/traefik/:/etc/traefik/
         environment:
             - INFOMANIAK_ACCESS_TOKEN
+            - WEB_DOMAIN
             - FQDN
         labels:
             - traefik.enable=true
