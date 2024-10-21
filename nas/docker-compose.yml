@@ -8,14 +8,14 @@ services:
             - "--api.insecure=true"
             - "--providers.docker=true"
             - "--providers.docker.exposedbydefault=false"
-            - "--entrypoints.web.address=:80"
-            - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
-            - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
-            - "--entrypoints.websecure.address=:443"
-            - "--entrypoints.websecure.http.tls=true"
-            - "--entrypoints.websecure.http.tls.certResolver=le"
-            - "--entrypoints.websecure.http.tls.domains[0].main=${FQDN}"
-            - "--entrypoints.websecure.http.tls.domains[0].sans=*.${FQDN}"
+            - "--entrypoints.lan.address=:80"
+            - "--entryPoints.lan.http.redirections.entryPoint.to=lansecure"
+            - "--entryPoints.lan.http.redirections.entryPoint.scheme=https"
+            - "--entrypoints.lansecure.address=:443"
+            - "--entrypoints.lansecure.http.tls=true"
+            - "--entrypoints.lansecure.http.tls.certResolver=le"
+            - "--entrypoints.lansecure.http.tls.domains[0].main=${FQDN}"
+            - "--entrypoints.lansecure.http.tls.domains[0].sans=*.${FQDN}"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
@@ -34,7 +34,7 @@ services:
             - FQDN
         labels:
             - traefik.enable=true
-            - traefik.http.routers.traefik.entryPoints=websecure
+            - traefik.http.routers.traefik.entryPoints=lansecure
             - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
@@ -49,7 +49,7 @@ services:
             - ${BASE_PATH}/portainer:/data
         labels:
             - traefik.enable=true
-            - traefik.http.routers.portainer.entryPoints=websecure
+            - traefik.http.routers.portainer.entryPoints=lansecure
             - traefik.http.routers.portainer.rule=Host(`portainer.${FQDN}`)
             - traefik.http.services.portainer.loadbalancer.server.port=9000
         restart: unless-stopped
@@ -65,7 +65,7 @@ services:
             - TZ
         labels:
             - traefik.enable=true
-            - traefik.http.routers.prowlarr.entryPoints=websecure
+            - traefik.http.routers.prowlarr.entryPoints=lansecure
             - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${FQDN}`)
         expose:
             - 9696
@@ -83,7 +83,7 @@ services:
             - TZ
         labels:
             - traefik.enable=true
-            - traefik.http.routers.sonarr.entryPoints=websecure
+            - traefik.http.routers.sonarr.entryPoints=lansecure
             - traefik.http.routers.sonarr.rule=Host(`sonarr.${FQDN}`)
         expose:
             - 8989
@@ -101,7 +101,7 @@ services:
             - TZ
         labels:
             - traefik.enable=true
-            - traefik.http.routers.bazarr.entryPoints=websecure
+            - traefik.http.routers.bazarr.entryPoints=lansecure
             - traefik.http.routers.bazarr.rule=Host(`bazarr.${FQDN}`)
         expose:
             - 6767
@@ -119,7 +119,7 @@ services:
             - TZ
         labels:
             - traefik.enable=true
-            - traefik.http.routers.radarr.entryPoints=websecure
+            - traefik.http.routers.radarr.entryPoints=lansecure
             - traefik.http.routers.radarr.rule=Host(`radarr.${FQDN}`)
         expose:
             - 7878
@@ -151,7 +151,7 @@ services:
             - 6881:6881/udp
         labels:
             - traefik.enable=true
-            - traefik.http.routers.qbittorrent.entryPoints=websecure
+            - traefik.http.routers.qbittorrent.entryPoints=lansecure
             - traefik.http.routers.qbittorrent.rule=Host(`torrent.${FQDN}`)
             - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
         expose:
@@ -169,7 +169,7 @@ services:
             - TZ
         labels:
             - traefik.enable=true
-            - traefik.http.routers.tautulli.entryPoints=websecure
+            - traefik.http.routers.tautulli.entryPoints=lansecure
             - traefik.http.routers.tautulli.rule=Host(`tautulli.${FQDN}`)
         expose:
             - 8181
@@ -190,11 +190,11 @@ services:
             - /volume1/Media/Books:/media/Books
         labels:
             - traefik.enable=true
-            - traefik.http.routers.calibre.entryPoints=websecure
+            - traefik.http.routers.calibre.entryPoints=lansecure
             - traefik.http.routers.calibre.rule=Host(`calibre.${FQDN}`)
             - traefik.http.routers.calibre.service=calibre
             - traefik.http.services.calibre.loadbalancer.server.port=8080
-            - traefik.http.routers.books.entryPoints=websecure
+            - traefik.http.routers.books.entryPoints=lansecure
             - traefik.http.routers.books.rule=Host(`books.${FQDN}`)
             - traefik.http.routers.books.service=books
             - traefik.http.services.books.loadbalancer.server.port=8081
@@ -237,7 +237,7 @@ services:
             - PAPERLESS_OCR_LANGUAGE
         labels:
             - traefik.enable=true
-            - traefik.http.routers.paperless.entryPoints=websecure
+            - traefik.http.routers.paperless.entryPoints=lansecure
             - traefik.http.routers.paperless.rule=Host(`paperless.${FQDN}`)
         expose:
             - 8000
@@ -250,7 +250,7 @@ services:
             - ${BASE_PATH}/actual:/data
         labels:
             - traefik.enable=true
-            - traefik.http.routers.actual.entryPoints=websecure
+            - traefik.http.routers.actual.entryPoints=lansecure
             - traefik.http.routers.actual.rule=Host(`actual.${FQDN}`)
         expose:
             - 5006
@@ -266,7 +266,7 @@ services:
             - ${BASE_PATH}/adguard/conf:/opt/adguardhome/conf
         labels:
             - traefik.enable=true
-            - traefik.http.routers.adguard.entryPoints=websecure
+            - traefik.http.routers.adguard.entryPoints=lansecure
             - traefik.http.routers.adguard.rule=Host(`adguard.${FQDN}`)
             - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
@@ -278,7 +278,7 @@ services:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
             - traefik.enable=true
-            - traefik.http.routers.immich.entryPoints=websecure
+            - traefik.http.routers.immich.entryPoints=lansecure
             - traefik.http.routers.immich.rule=Host(`immich.${FQDN}`)
             - traefik.http.services.immich.loadbalancer.server.port=2283
         environment:
