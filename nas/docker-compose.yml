@@ -155,7 +155,7 @@ services:
 
     qbittorrent:
         container_name: qbittorrent
-        image: lscr.io/linuxserver/qbittorrent:5.0.0
+        image: lscr.io/linuxserver/qbittorrent:5.0.1
         environment:
             - PUID
             - PGID
