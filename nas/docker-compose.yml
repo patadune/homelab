@@ -126,7 +126,7 @@ services:
         restart: unless-stopped
 
     readarr:
-        image: lscr.io/linuxserver/readarr:0.3.32-develop
+        image: lscr.io/linuxserver/readarr:0.4.3-develop
         container_name: readarr
         volumes:
             - ${BASE_PATH}/readarr:/config
