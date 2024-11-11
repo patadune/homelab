@@ -145,7 +145,7 @@ services:
 
     recyclarr:
         container_name: recyclarr
-        image: ghcr.io/recyclarr/recyclarr:7.3.0
+        image: ghcr.io/recyclarr/recyclarr:7.4.0
         user: ${PUID}:${PGID}
         environment:
             - TZ
