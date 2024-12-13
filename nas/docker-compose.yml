@@ -273,7 +273,7 @@ services:
 
     immich-server:
         container_name: immich_server
-        image: ghcr.io/immich-app/immich-server:v1.122.2
+        image: ghcr.io/immich-app/immich-server:v1.122.3
         volumes:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
