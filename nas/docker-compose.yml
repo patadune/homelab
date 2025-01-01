@@ -90,7 +90,7 @@ services:
         restart: unless-stopped
 
     bazarr:
-        image: lscr.io/linuxserver/bazarr:1.5.0
+        image: lscr.io/linuxserver/bazarr:1.5.1
         container_name: bazarr
         volumes:
             - ${BASE_PATH}/bazarr:/config
