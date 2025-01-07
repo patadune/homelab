@@ -14,8 +14,8 @@ services:
             - "--entrypoints.websecure.address=:443"
             - "--entrypoints.websecure.http.tls=true"
             - "--entrypoints.websecure.http.tls.certResolver=le"
-            - "--entrypoints.websecure.http.tls.domains[0].main=${FQDN}"
-            - "--entrypoints.websecure.http.tls.domains[0].sans=*.${FQDN}"
+            - "--entrypoints.websecure.http.tls.domains[0].main=${LAN_DOMAIN}"
+            - "--entrypoints.websecure.http.tls.domains[0].sans=*.${LAN_DOMAIN}"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
@@ -31,11 +31,11 @@ services:
             - ${BASE_PATH}/traefik:/etc/traefik
         environment:
             - INFOMANIAK_ACCESS_TOKEN
-            - FQDN
+            - LAN_DOMAIN
         labels:
             - traefik.enable=true
             - traefik.http.routers.traefik.entryPoints=websecure
-            - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
+            - traefik.http.routers.traefik.rule=Host(`traefik.${LAN_DOMAIN}`)
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
@@ -50,7 +50,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.portainer.entryPoints=websecure
-            - traefik.http.routers.portainer.rule=Host(`portainer.${FQDN}`)
+            - traefik.http.routers.portainer.rule=Host(`portainer.${LAN_DOMAIN}`)
             - traefik.http.services.portainer.loadbalancer.server.port=9000
         restart: unless-stopped
 
@@ -71,7 +71,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.tv.entryPoints=websecure
-            - traefik.http.routers.tv.rule=Host(`tv.${FQDN}`)
+            - traefik.http.routers.tv.rule=Host(`tv.${LAN_DOMAIN}`)
             - traefik.http.services.tv.loadbalancer.server.port=9981
         restart: unless-stopped
 
@@ -86,7 +86,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.adguard.entryPoints=websecure
-            - traefik.http.routers.adguard.rule=Host(`adguard.${FQDN}`)
+            - traefik.http.routers.adguard.rule=Host(`adguard.${LAN_DOMAIN}`)
             - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
 
@@ -98,7 +98,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.uptime-kuma.entryPoints=websecure
-            - traefik.http.routers.uptime-kuma.rule=Host(`uptime.${FQDN}`)
+            - traefik.http.routers.uptime-kuma.rule=Host(`uptime.${LAN_DOMAIN}`)
         expose:
             - 3001
         restart: unless-stopped

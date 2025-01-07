@@ -9,4 +9,4 @@ http:
     dsm:
       loadBalancer:
         servers:
-        - url: "http://{{env "FQDN"}}:5000"
+        - url: "http://{{env "LAN_DOMAIN"}}:5000"

@@ -15,8 +15,8 @@ services:
             - "--entrypoints.lansecure.address=:443"
             - "--entrypoints.lansecure.http.tls=true"
             - "--entrypoints.lansecure.http.tls.certResolver=le"
-            - "--entrypoints.lansecure.http.tls.domains[0].main=${FQDN}"
-            - "--entrypoints.lansecure.http.tls.domains[0].sans=*.${FQDN}"
+            - "--entrypoints.lansecure.http.tls.domains[0].main=${LAN_DOMAIN}"
+            - "--entrypoints.lansecure.http.tls.domains[0].sans=*.${LAN_DOMAIN}"
             - "--entrypoints.websecure.address=:13443"
             - "--entrypoints.websecure.http.tls=true"
             - "--entrypoints.websecure.http.tls.certResolver=le"
@@ -39,11 +39,11 @@ services:
         environment:
             - INFOMANIAK_ACCESS_TOKEN
             - WEB_DOMAIN
-            - FQDN
+            - LAN_DOMAIN
         labels:
             - traefik.enable=true
             - traefik.http.routers.traefik.entryPoints=lansecure
-            - traefik.http.routers.traefik.rule=Host(`traefik.${FQDN}`)
+            - traefik.http.routers.traefik.rule=Host(`traefik.${LAN_DOMAIN}`)
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
@@ -58,7 +58,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.portainer.entryPoints=lansecure
-            - traefik.http.routers.portainer.rule=Host(`portainer.${FQDN}`)
+            - traefik.http.routers.portainer.rule=Host(`portainer.${LAN_DOMAIN}`)
             - traefik.http.services.portainer.loadbalancer.server.port=9000
         restart: unless-stopped
 
@@ -74,7 +74,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.prowlarr.entryPoints=lansecure
-            - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${FQDN}`)
+            - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${LAN_DOMAIN}`)
         expose:
             - 9696
         restart: unless-stopped
@@ -92,7 +92,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.sonarr.entryPoints=lansecure
-            - traefik.http.routers.sonarr.rule=Host(`sonarr.${FQDN}`)
+            - traefik.http.routers.sonarr.rule=Host(`sonarr.${LAN_DOMAIN}`)
         expose:
             - 8989
         restart: unless-stopped
@@ -110,7 +110,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.bazarr.entryPoints=lansecure
-            - traefik.http.routers.bazarr.rule=Host(`bazarr.${FQDN}`)
+            - traefik.http.routers.bazarr.rule=Host(`bazarr.${LAN_DOMAIN}`)
         expose:
             - 6767
         restart: unless-stopped
@@ -128,7 +128,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.radarr.entryPoints=lansecure
-            - traefik.http.routers.radarr.rule=Host(`radarr.${FQDN}`)
+            - traefik.http.routers.radarr.rule=Host(`radarr.${LAN_DOMAIN}`)
         expose:
             - 7878
         restart: unless-stopped
@@ -160,7 +160,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.qbittorrent.entryPoints=lansecure
-            - traefik.http.routers.qbittorrent.rule=Host(`torrent.${FQDN}`)
+            - traefik.http.routers.qbittorrent.rule=Host(`torrent.${LAN_DOMAIN}`)
             - traefik.http.services.qbittorrent.loadbalancer.server.port=8080
         expose:
             - 8080
@@ -178,7 +178,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.tautulli.entryPoints=lansecure
-            - traefik.http.routers.tautulli.rule=Host(`tautulli.${FQDN}`)
+            - traefik.http.routers.tautulli.rule=Host(`tautulli.${LAN_DOMAIN}`)
         expose:
             - 8181
         restart: unless-stopped
@@ -199,11 +199,11 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.calibre.entryPoints=lansecure
-            - traefik.http.routers.calibre.rule=Host(`calibre.${FQDN}`)
+            - traefik.http.routers.calibre.rule=Host(`calibre.${LAN_DOMAIN}`)
             - traefik.http.routers.calibre.service=calibre
             - traefik.http.services.calibre.loadbalancer.server.port=8080
             - traefik.http.routers.books.entryPoints=lansecure
-            - traefik.http.routers.books.rule=Host(`books.${FQDN}`)
+            - traefik.http.routers.books.rule=Host(`books.${LAN_DOMAIN}`)
             - traefik.http.routers.books.service=books
             - traefik.http.services.books.loadbalancer.server.port=8081
 
@@ -246,7 +246,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.paperless.entryPoints=lansecure
-            - traefik.http.routers.paperless.rule=Host(`paperless.${FQDN}`)
+            - traefik.http.routers.paperless.rule=Host(`paperless.${LAN_DOMAIN}`)
         expose:
             - 8000
         restart: unless-stopped
@@ -259,7 +259,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.actual.entryPoints=lansecure
-            - traefik.http.routers.actual.rule=Host(`actual.${FQDN}`)
+            - traefik.http.routers.actual.rule=Host(`actual.${LAN_DOMAIN}`)
         expose:
             - 5006
         restart: unless-stopped
@@ -275,7 +275,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.adguard.entryPoints=lansecure
-            - traefik.http.routers.adguard.rule=Host(`adguard.${FQDN}`)
+            - traefik.http.routers.adguard.rule=Host(`adguard.${LAN_DOMAIN}`)
             - traefik.http.services.adguard.loadbalancer.server.port=3000
         restart: unless-stopped
 
@@ -287,7 +287,7 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.immich.entryPoints=lansecure
-            - traefik.http.routers.immich.rule=Host(`immich.${FQDN}`)
+            - traefik.http.routers.immich.rule=Host(`immich.${LAN_DOMAIN}`)
             - traefik.http.services.immich.loadbalancer.server.port=2283
         environment:
             REDIS_HOSTNAME: immich-redis
