@@ -237,12 +237,12 @@ services:
             - ${BASE_PATH}/paperless/export:/usr/src/paperless/export
             - ${BASE_PATH}/paperless/consume:/usr/src/paperless/consume
         environment:
-            - PAPERLESS_REDIS
-            - USERMAP_UID
-            - USERMAP_GID
-            - PAPERLESS_URL
-            - PAPERLESS_TIME_ZONE
-            - PAPERLESS_OCR_LANGUAGE
+            PAPERLESS_REDIS: redis://paperless-valkey:6379
+            USERMAP_UID: ${PUID}
+            USERMAP_GID: ${PGID}
+            PAPERLESS_URL: https://paperless.${LAN_DOMAIN}
+            PAPERLESS_TIME_ZONE: ${TZ}
+            PAPERLESS_OCR_LANGUAGE: fra
         labels:
             - traefik.enable=true
             - traefik.http.routers.paperless.entryPoints=lansecure
