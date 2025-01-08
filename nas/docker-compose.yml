@@ -220,7 +220,7 @@ services:
         restart: unless-stopped
 
     paperless-valkey:
-        image: valkey/valkey:8.0.1-alpine
+        image: valkey/valkey:8.0.2-alpine
         container_name: paperless-valkey
         restart: unless-stopped
         volumes:
