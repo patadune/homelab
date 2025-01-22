@@ -227,7 +227,7 @@ services:
             - ${BASE_PATH}/valkey:/data
 
     paperless:
-        image: ghcr.io/paperless-ngx/paperless-ngx:2.13.5
+        image: ghcr.io/paperless-ngx/paperless-ngx:2.14.5
         container_name: paperless
         depends_on:
             - paperless-valkey
