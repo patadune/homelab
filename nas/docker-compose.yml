@@ -63,7 +63,7 @@ services:
         restart: unless-stopped
 
     prowlarr:
-        image: lscr.io/linuxserver/prowlarr:1.29.2
+        image: lscr.io/linuxserver/prowlarr:1.30.2
         container_name: prowlarr
         volumes:
             - ${BASE_PATH}/prowlarr:/config
