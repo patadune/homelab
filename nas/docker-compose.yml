@@ -295,7 +295,7 @@ services:
 
     immich-machine-learning:
         container_name: immich_machine_learning
-        image: ghcr.io/immich-app/immich-machine-learning:v1.124.2
+        image: ghcr.io/immich-app/immich-machine-learning:v1.125.2
         volumes:
             - model-cache:/cache
         environment:
