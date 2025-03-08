@@ -173,29 +173,23 @@ services:
             - 8181
         restart: unless-stopped
 
-    calibre:
-        image: linuxserver/calibre:7.26.0
-        container_name: calibre
+    calibre-web-automated:
+        image: crocodilestick/calibre-web-automated:V3.0.4
+        container_name: calibre-web-automated
         restart: unless-stopped
         environment:
             - TZ
             - PUID
             - PGID
-            - CUSTOM_USER
-            - PASSWORD
         volumes:
-            - ${BASE_PATH}/calibre:/config
-            - /volume1/Media/Books:/media/Books
+            - ${BASE_PATH}/cwa:/config
+            - /volume1/Media/Books/Ingest:/cwa-book-ingest
+            - /volume1/Media/Books/Calibre:/calibre-library
         labels:
             - traefik.enable=true
             - traefik.http.routers.calibre.entryPoints=lansecure
             - traefik.http.routers.calibre.rule=Host(`calibre.${LAN_DOMAIN}`)
-            - traefik.http.routers.calibre.service=calibre
-            - traefik.http.services.calibre.loadbalancer.server.port=8080
-            - traefik.http.routers.books.entryPoints=lansecure
-            - traefik.http.routers.books.rule=Host(`books.${LAN_DOMAIN}`)
-            - traefik.http.routers.books.service=books
-            - traefik.http.services.books.loadbalancer.server.port=8081
+            - traefik.http.services.calibre.loadbalancer.server.port=8083
 
     home-assistant:
         image: homeassistant/home-assistant:2025.3
