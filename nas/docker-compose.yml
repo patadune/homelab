@@ -157,7 +157,7 @@ services:
         restart: unless-stopped
 
     tautulli:
-        image: lscr.io/linuxserver/tautulli:2.15.1
+        image: lscr.io/linuxserver/tautulli:2.15.2
         container_name: tautulli
         volumes:
             - ${BASE_PATH}/tautulli:/config
