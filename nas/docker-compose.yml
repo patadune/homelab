@@ -265,7 +265,7 @@ services:
 
     immich-server:
         container_name: immich_server
-        image: ghcr.io/immich-app/immich-server:v1.131.3
+        image: ghcr.io/immich-app/immich-server:v1.132.0
         volumes:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
@@ -289,7 +289,7 @@ services:
 
     immich-machine-learning:
         container_name: immich_machine_learning
-        image: ghcr.io/immich-app/immich-machine-learning:v1.131.3
+        image: ghcr.io/immich-app/immich-machine-learning:v1.132.0
         volumes:
             - model-cache:/cache
         environment:
@@ -303,7 +303,7 @@ services:
 
     immich-redis:
         container_name: immich_redis
-        image: redis:6.2-alpine
+        image: valkey/valkey:8.1.0-alpine
         healthcheck:
             test: redis-cli ping || exit 1
         restart: unless-stopped
