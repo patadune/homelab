@@ -39,21 +39,6 @@ services:
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
-    portainer:
-        image: portainer/portainer-ce:2.29.1-alpine
-        container_name: portainer
-        environment:
-            - TZ
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ${BASE_PATH}/portainer:/data
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.portainer.entryPoints=websecure
-            - traefik.http.routers.portainer.rule=Host(`portainer.${LAN_DOMAIN}`)
-            - traefik.http.services.portainer.loadbalancer.server.port=9000
-        restart: unless-stopped
-
     tvheadend:
         image: lscr.io/linuxserver/tvheadend:latest
         container_name: tvheadend

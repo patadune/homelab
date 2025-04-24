@@ -47,21 +47,6 @@ services:
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
-    portainer:
-        image: portainer/portainer-ce:2.29.1-alpine
-        container_name: portainer
-        expose:
-            - 9000
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ${BASE_PATH}/portainer:/data
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.portainer.entryPoints=lansecure
-            - traefik.http.routers.portainer.rule=Host(`portainer.${LAN_DOMAIN}`)
-            - traefik.http.services.portainer.loadbalancer.server.port=9000
-        restart: unless-stopped
-
     prowlarr:
         image: lscr.io/linuxserver/prowlarr:1.34.1
         container_name: prowlarr
