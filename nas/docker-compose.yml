@@ -204,7 +204,7 @@ services:
         restart: unless-stopped
 
     paperless-valkey:
-        image: valkey/valkey:8.1.0-alpine
+        image: valkey/valkey:8.1.1-alpine
         container_name: paperless-valkey
         restart: unless-stopped
         volumes:
@@ -303,7 +303,7 @@ services:
 
     immich-redis:
         container_name: immich_redis
-        image: valkey/valkey:8.1.0-alpine
+        image: valkey/valkey:8.1.1-alpine
         healthcheck:
             test: redis-cli ping || exit 1
         restart: unless-stopped
