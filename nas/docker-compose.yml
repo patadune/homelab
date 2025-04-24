@@ -1,6 +1,6 @@
 services:
     traefik:
-        image: traefik:v3.3.6
+        image: traefik:v3.3
         container_name: traefik
         command:
             - "--log.level=INFO"
@@ -204,14 +204,14 @@ services:
         restart: unless-stopped
 
     paperless-valkey:
-        image: valkey/valkey:8.1.1-alpine
+        image: valkey/valkey:8.1-alpine
         container_name: paperless-valkey
         restart: unless-stopped
         volumes:
             - ${BASE_PATH}/valkey:/data
 
     paperless:
-        image: ghcr.io/paperless-ngx/paperless-ngx:2.15.3
+        image: ghcr.io/paperless-ngx/paperless-ngx:2.15
         container_name: paperless
         depends_on:
             - paperless-valkey
@@ -303,7 +303,7 @@ services:
 
     immich-redis:
         container_name: immich_redis
-        image: valkey/valkey:8.1.1-alpine
+        image: valkey/valkey:8.1-alpine
         healthcheck:
             test: redis-cli ping || exit 1
         restart: unless-stopped
