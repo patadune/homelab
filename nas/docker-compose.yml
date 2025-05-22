@@ -250,7 +250,7 @@ services:
 
     immich-server:
         container_name: immich_server
-        image: ghcr.io/immich-app/immich-server:v1.132.3
+        image: ghcr.io/immich-app/immich-server:v1.133.0
         volumes:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
@@ -274,7 +274,7 @@ services:
 
     immich-machine-learning:
         container_name: immich_machine_learning
-        image: ghcr.io/immich-app/immich-machine-learning:v1.132.3
+        image: ghcr.io/immich-app/immich-machine-learning:v1.133.0
         volumes:
             - model-cache:/cache
         environment:
@@ -295,7 +295,7 @@ services:
 
     immich-db:
         container_name: immich_postgres
-        image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0
+        image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0
         environment:
             POSTGRES_USER: ${IMMICH_DB_USERNAME}
             POSTGRES_PASSWORD: ${IMMICH_DB_PASSWORD}
@@ -303,7 +303,6 @@ services:
             POSTGRES_INITDB_ARGS: '--data-checksums'
         volumes:
             - ${BASE_PATH}/immich-db:/var/lib/postgresql/data
-        command: ["postgres", "-c", "shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
         restart: unless-stopped
 
 volumes:
