@@ -115,6 +115,7 @@ services:
         environment:
             - WG_HOST
             - PASSWORD_HASH
+            - WG_DEFAULT_DNS
         volumes:
             - ${BASE_PATH}/wireguard:/etc/wireguard
         labels:
