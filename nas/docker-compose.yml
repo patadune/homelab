@@ -250,7 +250,7 @@ services:
 
     immich-server:
         container_name: immich_server
-        image: ghcr.io/immich-app/immich-server:v1.133.0
+        image: ghcr.io/immich-app/immich-server:v1.134.0
         volumes:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
@@ -274,7 +274,7 @@ services:
 
     immich-machine-learning:
         container_name: immich_machine_learning
-        image: ghcr.io/immich-app/immich-machine-learning:v1.133.0
+        image: ghcr.io/immich-app/immich-machine-learning:v1.134.0
         volumes:
             - model-cache:/cache
         environment:
