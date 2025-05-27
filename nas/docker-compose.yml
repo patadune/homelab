@@ -125,7 +125,7 @@ services:
             - PUID
             - PGID
             - TZ
-            - DOCKER_MODS=ghcr.io/gabe565/linuxserver-mod-vuetorrent
+            - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod
         volumes:
             - ${BASE_PATH}/qbittorrent:/config
             - /volume1/Media/Downloads:/media/Downloads
