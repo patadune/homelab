@@ -234,7 +234,7 @@ services:
         restart: unless-stopped
 
     adguard:
-        image: adguard/adguardhome:v0.107.63
+        image: adguard/adguardhome:v0.107.64
         container_name: adguard
         ports:
             - 53:53/udp
