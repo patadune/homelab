@@ -39,27 +39,6 @@ services:
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
-    tvheadend:
-        image: lscr.io/linuxserver/tvheadend:latest
-        container_name: tvheadend
-        environment:
-            - PUID
-            - PGID
-            - TZ
-        volumes:
-            - ${BASE_PATH}/tvheadend:/config
-            - recordings:/recordings
-        ports:
-            - 9982:9982
-        devices:
-            - /dev/dvb:/dev/dvb
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.tv.entryPoints=websecure
-            - traefik.http.routers.tv.rule=Host(`tv.${LAN_DOMAIN}`)
-            - traefik.http.services.tv.loadbalancer.server.port=9981
-        restart: unless-stopped
-
     openwebrx:
         image: slechev/openwebrxplus:1.2.89
         container_name: openwebrx
@@ -112,10 +91,3 @@ services:
 networks:
     default:
         driver: bridge
-
-volumes:
-  recordings:
-    driver_opts:
-      type: cifs
-      o: "ip=${SAMBA_IP},username=${SAMBA_USER},password=${SAMBA_PASSWORD},uid=${PUID},gid=${PGID},vers=3.0"
-      device: "//${SAMBA_IP}/Recordings"
