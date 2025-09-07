@@ -40,7 +40,7 @@ services:
         restart: unless-stopped
 
     openwebrx:
-        image: slechev/openwebrxplus:1.2.91
+        image: slechev/openwebrxplus:1.2.92
         container_name: openwebrx
         volumes:
             - ${BASE_PATH}/openwebrx/var:/var/lib/openwebrx
