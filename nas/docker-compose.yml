@@ -82,6 +82,24 @@ services:
             - 8989
         restart: unless-stopped
 
+    lidarr:
+        image: lscr.io/linuxserver/lidarr:2.13.3
+        container_name: lidarr
+        volumes:
+            - ${BASE_PATH}/lidarr:/config
+            - /volume1/Media:/media
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.sonarr.entryPoints=lansecure
+            - traefik.http.routers.sonarr.rule=Host(`lidarr.${LAN_DOMAIN}`)
+        expose:
+            - 8686
+        restart: unless-stopped
+
     bazarr:
         image: lscr.io/linuxserver/bazarr:1.5.2
         container_name: bazarr
