@@ -141,6 +141,20 @@ services:
             - 8080
         restart: unless-stopped
 
+    changedetection:
+        image: ghcr.io/dgtlmoon/changedetection.io
+        container_name: changedetection
+        restart: unless-stopped
+        environment:
+            - TZ
+        volumes:
+            - ${BASE_PATH}/changedetection:/datastore
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.changedetection.entryPoints=lansecure
+            - traefik.http.routers.changedetection.rule=Host(`cd.${LAN_DOMAIN}`)
+            - traefik.http.services.changedetection.loadbalancer.server.port=5000
+
     calibre-web-automated:
         image: crocodilestick/calibre-web-automated:V3.0.4
         container_name: calibre-web-automated
