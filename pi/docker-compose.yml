@@ -55,7 +55,7 @@ services:
         restart: unless-stopped
 
     uptime-kuma:
-        image: louislam/uptime-kuma:1.23.17
+        image: louislam/uptime-kuma:2.0.2
         container_name: uptime-kuma
         volumes:
             - ${BASE_PATH}/uptime-kuma:/app/data
