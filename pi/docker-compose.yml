@@ -39,24 +39,6 @@ services:
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
-    tvheadend:
-        image: lscr.io/linuxserver/tvheadend:latest
-        container_name: tvheadend
-        environment:
-            - PUID
-            - PGID
-            - TZ
-        volumes:
-            - ${BASE_PATH}/tvheadend:/config
-        ports:
-            - 9982:9982
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.tv.entryPoints=websecure
-            - traefik.http.routers.tv.rule=Host(`tv.${LAN_DOMAIN}`)
-            - traefik.http.services.tv.loadbalancer.server.port=9981
-        restart: unless-stopped
-
     openwebrx:
         image: slechev/openwebrxplus:1.2.93
         container_name: openwebrx
