@@ -142,7 +142,7 @@ services:
         restart: unless-stopped
 
     changedetection:
-        image: ghcr.io/dgtlmoon/changedetection.io:0.50
+        image: ghcr.io/dgtlmoon/changedetection.io:0.51
         container_name: changedetection
         restart: unless-stopped
         environment:
