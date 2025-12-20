@@ -185,7 +185,7 @@ services:
             DATABASE_PASSWORD: ${BOOKLORE_DB_PASSWORD}
             BOOKLORE_PORT: 6060
         depends_on:
-            - mariadb
+            - booklore-db
         labels:
             - traefik.enable=true
             - traefik.http.routers.booklore.entryPoints=lansecure
