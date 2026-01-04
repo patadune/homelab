@@ -213,7 +213,8 @@ services:
         restart: unless-stopped
 
     audiobookshelf:
-        image: ghcr.io/advplyr/audiobookshelf:v2.32.1
+        image: ghcr.io/advplyr/audiobookshelf:2.32.1
+        container_name: audiobookshelf
         volumes:
             - /volume1/Media/Audiobooks:/audiobooks
             - /volume1/Media/Podcasts:/podcasts
@@ -225,7 +226,8 @@ services:
             - traefik.enable=true
             - traefik.http.routers.bookshelf.entryPoints=lansecure
             - traefik.http.routers.bookshelf.rule=Host(`bookshelf.${LAN_DOMAIN}`)
-            - traefik.http.services.bookshelf.loadbalancer.server.port=13378
+            - traefik.http.services.bookshelf.loadbalancer.server.port=80
+        restart: unless-stopped
 
     home-assistant:
         image: homeassistant/home-assistant:2025.12
