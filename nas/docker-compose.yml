@@ -212,6 +212,21 @@ services:
             - ${BASE_PATH}/booklore-db:/config
         restart: unless-stopped
 
+    audiobookshelf:
+        image: ghcr.io/advplyr/audiobookshelf:v2.32.1
+        volumes:
+            - /volume1/Media/Audiobooks:/audiobooks
+            - /volume1/Media/Podcasts:/podcasts
+            - ${BASE_PATH}/bookshelf/config:/config
+            - ${BASE_PATH}/bookshelf/metadata:/metadata
+        environment:
+            - TZ
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.bookshelf.entryPoints=lansecure
+            - traefik.http.routers.bookshelf.rule=Host(`bookshelf.${LAN_DOMAIN}`)
+            - traefik.http.services.bookshelf.loadbalancer.server.port=13378
+
     home-assistant:
         image: homeassistant/home-assistant:2025.12
         container_name: home-assistant
