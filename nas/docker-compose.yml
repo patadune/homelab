@@ -156,7 +156,7 @@ services:
             - traefik.http.services.changedetection.loadbalancer.server.port=5000
 
     calibre-web-automated:
-        image: crocodilestick/calibre-web-automated:V3.0.4
+        image: ghcr.io/crocodilestick/calibre-web-automated:V3.1.4
         container_name: calibre-web-automated
         restart: unless-stopped
         environment:
