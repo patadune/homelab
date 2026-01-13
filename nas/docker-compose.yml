@@ -141,24 +141,6 @@ services:
             - 8080
         restart: unless-stopped
 
-    calibre-web-automated:
-        image: ghcr.io/crocodilestick/calibre-web-automated:V3.1.4
-        container_name: calibre-web-automated
-        restart: unless-stopped
-        environment:
-            - TZ
-            - PUID
-            - PGID
-        volumes:
-            - ${BASE_PATH}/cwa:/config
-            - /volume1/Media/Books/Ingest:/cwa-book-ingest
-            - /volume1/Media/Books/Calibre:/calibre-library
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.calibre.entryPoints=lansecure
-            - traefik.http.routers.calibre.rule=Host(`calibre.${LAN_DOMAIN}`)
-            - traefik.http.services.calibre.loadbalancer.server.port=8083
-
     audiobookshelf:
         image: ghcr.io/advplyr/audiobookshelf:2.32.1
         container_name: audiobookshelf
