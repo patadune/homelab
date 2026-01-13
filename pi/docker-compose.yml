@@ -39,6 +39,27 @@ services:
             - traefik.http.services.traefik.loadbalancer.server.port=8080
         restart: unless-stopped
 
+    openwebrx:
+        image: slechev/openwebrxplus:1.2.103
+        container_name: openwebrx
+        volumes:
+            - ${BASE_PATH}/openwebrx/var:/var/lib/openwebrx
+            - ${BASE_PATH}/openwebrx/etc:/etc/openwebrx
+        environment:
+            - TZ
+            - HEALTHCHECK_USB_0BDA_2838=1
+        devices:
+            - /dev/bus/usb:/dev/bus/usb
+        tmpfs:
+            - /tmp/openwebrx
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.openwebrx.entryPoints=websecure
+            - traefik.http.routers.openwebrx.rule=Host(`sdr.${LAN_DOMAIN}`)
+        expose:
+            - 8073
+        restart: unless-stopped
+
     adguard:
         image: adguard/adguardhome:v0.107.71
         container_name: adguard
