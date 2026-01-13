@@ -141,6 +141,45 @@ services:
             - 8080
         restart: unless-stopped
 
+    booklore:
+        image: booklore/booklore:v1.17.0
+        container_name: booklore
+        environment:
+            USER_ID: ${PUID}
+            GROUP_ID: ${PGID}
+            TZ: ${TZ}
+            DATABASE_URL: jdbc:mariadb://booklore-db:3306/booklore
+            DATABASE_USERNAME: ${BOOKLORE_DB_USER}
+            DATABASE_PASSWORD: ${BOOKLORE_DB_PASSWORD}
+            BOOKLORE_PORT: 6060
+        depends_on:
+            - booklore-db
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.booklore.entryPoints=lansecure
+            - traefik.http.routers.booklore.rule=Host(`booklore.${LAN_DOMAIN}`)
+            - traefik.http.services.booklore.loadbalancer.server.port=6060
+        volumes:
+            - ${BASE_PATH}/booklore:/app/data
+            - /volume1/Media/Books/Bookdrop:/bookdrop
+            - /volume1/Media/Books/Booklore:/books
+        restart: unless-stopped
+
+    booklore-db:
+        image: lscr.io/linuxserver/mariadb:11.4.8
+        container_name: booklore-db
+        environment:
+            PUID: ${PUID}
+            PGID: ${PGID}
+            TZ: ${TZ}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: booklore
+            MYSQL_USER: ${BOOKLORE_DB_USER}
+            MYSQL_PASSWORD: ${BOOKLORE_DB_PASSWORD}
+        volumes:
+            - ${BASE_PATH}/booklore-db:/config
+        restart: unless-stopped
+
     audiobookshelf:
         image: ghcr.io/advplyr/audiobookshelf:2.32.1
         container_name: audiobookshelf
