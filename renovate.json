@@ -2,20 +2,5 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
-  ],
-  "packageRules": [
-    {
-      "matchPackageNames": [
-        "lscr.io/linuxserver/calibre-web"
-      ],
-      "allowedVersions": "/^(?<major>0)\\.(?<minor>\\d+)\\.(?<fix>\\d+)$/"
-    },
-    {
-      "matchPackageNames": [
-        "lscr.io/linuxserver/tautulli",
-        "lscr.io/linuxserver/qbittorrent"
-      ],
-      "allowedVersions": "/^(?<major>\\d{1})\\.(?<minor>\\d+)\\.(?<fix>\\d+)$/"
-    }
   ]
 }
