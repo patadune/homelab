@@ -141,24 +141,6 @@ services:
             - 8080
         restart: unless-stopped
 
-    beets:
-        image: lscr.io/linuxserver/beets:2.6.1
-        container_name: beets
-        environment:
-            - PUID
-            - PGID
-            - TZ
-        volumes:
-            - ${BASE_PATH}/beets:/config
-            - /volume1/Media/Music:/music
-            - /volume1/Media/Downloads:/downloads
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.beets.entryPoints=lansecure
-            - traefik.http.routers.beets.rule=Host(`beets.${LAN_DOMAIN}`)
-            - traefik.http.services.beets.loadbalancer.server.port=8337
-        restart: unless-stopped
-
     booklore:
         image: booklore/booklore:v1.18.5
         container_name: booklore
