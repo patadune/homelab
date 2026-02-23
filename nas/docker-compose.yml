@@ -197,18 +197,6 @@ services:
             - traefik.http.services.bookshelf.loadbalancer.server.port=80
         restart: unless-stopped
 
-    home-assistant:
-        image: homeassistant/home-assistant:2026.2
-        container_name: home-assistant
-        volumes:
-            - ${BASE_PATH}/home-assistant:/config
-        environment:
-            - TZ
-        network_mode: host
-        expose:
-            - 8123
-        restart: unless-stopped
-
     paperless-valkey:
         image: valkey/valkey:9.0-alpine
         container_name: paperless-valkey
