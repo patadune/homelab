@@ -88,6 +88,22 @@ services:
             - 3001
         restart: unless-stopped
 
+    home-assistant:
+        image: homeassistant/home-assistant:2026.2
+        container_name: home-assistant
+        cap_add:
+            - NET_ADMIN
+            - NET_RAW
+        volumes:
+            - /run/dbus:/run/dbus:ro
+            - ${BASE_PATH}/home-assistant:/config
+        environment:
+            - TZ
+        network_mode: host
+        expose:
+            - 8123
+        restart: unless-stopped
+
 networks:
     default:
         driver: bridge
