@@ -166,7 +166,7 @@ services:
         restart: unless-stopped
 
     booklore-db:
-        image: lscr.io/linuxserver/mariadb:11.4.8
+        image: lscr.io/linuxserver/mariadb:11.4.9
         container_name: booklore-db
         environment:
             PUID: ${PUID}
