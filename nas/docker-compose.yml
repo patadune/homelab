@@ -141,6 +141,19 @@ services:
             - 8080
         restart: unless-stopped
 
+    qui:
+        image: ghcr.io/autobrr/qui:v1.14.1
+        container_name: qui
+        volumes:
+            - ${BASE_PATH}/qui:/config
+            - /volume1/Media/Downloads:/media/Downloads
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.qui.entryPoints=lansecure
+            - traefik.http.routers.qui.rule=Host(`qui.${LAN_DOMAIN}`)
+            - traefik.http.services.qui.loadbalancer.server.port=7476
+        restart: unless-stopped
+
     booklore:
         image: booklore/booklore:v2.0.5
         container_name: booklore
