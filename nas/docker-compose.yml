@@ -155,7 +155,7 @@ services:
         restart: unless-stopped
 
     booklore:
-        image: booklore/booklore:v2.0.5
+        image: booklore/booklore:v2.2.0
         container_name: booklore
         environment:
             USER_ID: ${PUID}
