@@ -171,6 +171,24 @@ services:
             - traefik.http.services.bookshelf.loadbalancer.server.port=80
         restart: unless-stopped
 
+    cops:
+        image: lscr.io/linuxserver/cops:4.3.3
+        container_name: cops
+        environment:
+            - PUID
+            - PGID
+            - TZ
+        volumes:
+            - /volume1/Media/Books:/books
+            - ${BASE_PATH}/cops/config:/config
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.cops.entryPoints=lansecure
+            - traefik.http.routers.cops.rule=Host(`cops.${LAN_DOMAIN}`)
+        expose:
+            - 80
+        restart: unless-stopped
+
     paperless-valkey:
         image: valkey/valkey:9.1-alpine
         container_name: paperless-valkey
