@@ -118,21 +118,6 @@ services:
             - 7878
         restart: unless-stopped
 
-    flaresolverr:
-        image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
-        container_name: flaresolverr
-        environment:
-            - TZ
-        volumes:
-            - ${BASE_PATH}/flaresolverr:/config
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.flaresolverr.entryPoints=lansecure
-            - traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.${LAN_DOMAIN}`)
-        expose:
-            - 8191
-        restart: unless-stopped
-
     qbittorrent:
         container_name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:5.2.0
