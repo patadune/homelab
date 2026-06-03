@@ -89,7 +89,7 @@ services:
         restart: unless-stopped
 
     home-assistant:
-        image: homeassistant/home-assistant:2026.5
+        image: homeassistant/home-assistant:2026.6
         container_name: home-assistant
         cap_add:
             - NET_ADMIN
