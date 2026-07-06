@@ -104,6 +104,36 @@ services:
             - 8123
         restart: unless-stopped
 
+    mosquitto:
+        image: eclipse-mosquitto:2.1.2-alpine
+        container_name: mqtt
+        volumes:
+            - ${BASE_PATH}/mosquitto:/mosquitto/config
+            - mosquitto_data:/mosquitto/data
+            - mosquitto_log:/mosquitto/log
+        ports:
+          - "127.0.0.1:1883:1883/tcp"
+
+    zigbee2mqtt:
+        image: koenkk/zigbee2mqtt:2.12.0
+        container_name: zigbee2mqtt
+        depends_on:
+            - mosquitto
+        volumes:
+            - ${BASE_PATH}/zigbee2mqtt:/app/data
+            - /run/udev:/run/udev:ro
+        environment:
+            - TZ
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.zigbee2mqtt.entryPoints=websecure
+            - traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee.${LAN_DOMAIN}`)
+        expose:
+            - 8080
+        devices:
+            - /dev/serial/by-id/${ZIGBEE_ADAPTER_ID}:/dev/ttyUSB0
+        restart: unless-stopped
+
     iSponsorBlockTV:
         image: ghcr.io/dmunozv04/isponsorblocktv:v2.9.0
         container_name: iSponsorBlockTV
