@@ -135,7 +135,7 @@ services:
         restart: unless-stopped
 
     iSponsorBlockTV:
-        image: ghcr.io/dmunozv04/isponsorblocktv:v2.9.0
+        image: ghcr.io/dmunozv04/isponsorblocktv:v2.10.0
         container_name: iSponsorBlockTV
         restart: unless-stopped
         volumes:
