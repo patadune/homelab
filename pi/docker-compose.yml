@@ -99,7 +99,10 @@ services:
             - ${BASE_PATH}/home-assistant:/config
         environment:
             - TZ
-        network_mode: host
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.home-assistant.entryPoints=websecure
+            - traefik.http.routers.home-assistant.rule=Host(`ha.${LAN_DOMAIN}`)
         expose:
             - 8123
         restart: unless-stopped
@@ -111,8 +114,6 @@ services:
             - ${BASE_PATH}/mosquitto:/mosquitto/config
             - mosquitto_data:/mosquitto/data
             - mosquitto_log:/mosquitto/log
-        ports:
-          - "127.0.0.1:1883:1883/tcp"
 
     zigbee2mqtt:
         image: koenkk/zigbee2mqtt:2.12.1
