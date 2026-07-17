@@ -147,6 +147,8 @@ networks:
         driver: bridge
 
 volumes:
+  mosquitto_data:
+  mosquitto_log:
   recordings:
     driver_opts:
       type: cifs
