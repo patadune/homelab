@@ -116,7 +116,7 @@ services:
             - mosquitto_log:/mosquitto/log
 
     zigbee2mqtt:
-        image: koenkk/zigbee2mqtt:2.14.0
+        image: koenkk/zigbee2mqtt:2.14.1
         container_name: zigbee2mqtt
         depends_on:
             - mosquitto
