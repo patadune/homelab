@@ -25,7 +25,7 @@ services:
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
-            - "--certificatesResolvers.le.acme.dnsChallenge.delayBeforeCheck=10"
+            - "--certificatesResolvers.le.acme.dnsChallenge.propagation.delayBeforeChecks=10"
         ports:
             - 80:80
             - 443:443
