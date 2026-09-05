@@ -17,11 +17,6 @@ services:
             - "--entrypoints.lansecure.http.tls.certResolver=le"
             - "--entrypoints.lansecure.http.tls.domains[0].main=${LAN_DOMAIN}"
             - "--entrypoints.lansecure.http.tls.domains[0].sans=*.${LAN_DOMAIN}"
-            - "--entrypoints.websecure.address=:13443"
-            - "--entrypoints.websecure.http.tls=true"
-            - "--entrypoints.websecure.http.tls.certResolver=le"
-            - "--entrypoints.websecure.http.tls.domains[0].main=${WEB_DOMAIN}"
-            - "--entrypoints.websecure.http.tls.domains[0].sans=*.${WEB_DOMAIN}"
             - "--certificatesResolvers.le.acme.email=${EMAIL}"
             - "--certificatesResolvers.le.acme.storage=/etc/traefik/acme.json"
             - "--certificatesResolvers.le.acme.dnsChallenge.provider=infomaniak"
@@ -29,7 +24,6 @@ services:
         ports:
             - 80:80
             - 443:443
-            - 13443:13443
         expose:
             - 8080
         volumes:
@@ -38,7 +32,6 @@ services:
             - ${BASE_PATH}/traefik/:/etc/traefik/
         environment:
             - INFOMANIAK_ACCESS_TOKEN
-            - WEB_DOMAIN
             - LAN_DOMAIN
         labels:
             - traefik.enable=true
