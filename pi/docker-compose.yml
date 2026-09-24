@@ -1,6 +1,6 @@
 services:
     traefik:
-        image: traefik:v3.7
+        image: traefik:v3.7.13
         container_name: traefik
         command:
             - "--log.level=INFO"
@@ -33,6 +33,7 @@ services:
             - INFOMANIAK_ACCESS_TOKEN
             - LAN_DOMAIN
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.traefik.entryPoints=websecure
             - traefik.http.routers.traefik.rule=Host(`traefik.${LAN_DOMAIN}`)
@@ -69,6 +70,7 @@ services:
             - ${BASE_PATH}/adguard/work:/opt/adguardhome/work
             - ${BASE_PATH}/adguard/conf:/opt/adguardhome/conf
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.adguard.entryPoints=websecure
             - traefik.http.routers.adguard.rule=Host(`adguard.${LAN_DOMAIN}`)
@@ -81,6 +83,7 @@ services:
         volumes:
             - ${BASE_PATH}/uptime-kuma:/app/data
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.uptime-kuma.entryPoints=websecure
             - traefik.http.routers.uptime-kuma.rule=Host(`uptime.${LAN_DOMAIN}`)
@@ -89,7 +92,7 @@ services:
         restart: unless-stopped
 
     home-assistant:
-        image: homeassistant/home-assistant:2026.9
+        image: homeassistant/home-assistant:2026.9.3
         container_name: home-assistant
         cap_add:
             - NET_ADMIN
@@ -100,6 +103,7 @@ services:
         environment:
             - TZ
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.home-assistant.entryPoints=websecure
             - traefik.http.routers.home-assistant.rule=Host(`ha.${LAN_DOMAIN}`)
@@ -109,11 +113,14 @@ services:
 
     mosquitto:
         image: eclipse-mosquitto:2.1.2-alpine
-        container_name: mqtt
+        container_name: mosquitto
         volumes:
             - ${BASE_PATH}/mosquitto:/mosquitto/config
             - mosquitto_data:/mosquitto/data
             - mosquitto_log:/mosquitto/log
+        labels:
+            - diun.enable=true
+            - diun.include_tags=^\d+\.\d+\.\d+-alpine$
 
     zigbee2mqtt:
         image: koenkk/zigbee2mqtt:2.14.1
@@ -126,6 +133,7 @@ services:
         environment:
             - TZ
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.zigbee2mqtt.entryPoints=websecure
             - traefik.http.routers.zigbee2mqtt.rule=Host(`zigbee.${LAN_DOMAIN}`)
@@ -141,6 +149,32 @@ services:
         restart: unless-stopped
         volumes:
             - ${BASE_PATH}/isponsorblocktv:/app/data
+        labels:
+            - diun.enable=true
+
+    diun:
+        image: crazymax/diun:4.33.0
+        container_name: diun
+        command: serve
+        volumes:
+            - ${BASE_PATH}/diun:/data
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        environment:
+            - TZ
+            - DIUN_NOTIF_PUSHOVER_TOKEN
+            - DIUN_NOTIF_PUSHOVER_RECIPIENT
+            - DIUN_WATCH_WORKERS=20
+            - DIUN_WATCH_SCHEDULE=0 */6 * * *
+            - DIUN_WATCH_JITTER=30s
+            - DIUN_PROVIDERS_DOCKER=true
+            - DIUN_DEFAULTS_WATCHREPO=true
+            - DIUN_DEFAULTS_MAXTAGS=3
+            - DIUN_DEFAULTS_SORTTAGS=semver
+            - DIUN_DEFAULTS_INCLUDETAGS=^v?\d+\.\d+\.\d+$
+        labels:
+            - diun.enable=true
+
+        restart: unless-stopped
 
 networks:
     default:
