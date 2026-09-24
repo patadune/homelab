@@ -148,7 +148,7 @@ services:
         restart: unless-stopped
 
     audiobookshelf:
-        image: ghcr.io/advplyr/audiobookshelf:2.36.0
+        image: ghcr.io/advplyr/audiobookshelf:2.36.1
         container_name: audiobookshelf
         volumes:
             - /volume1/Media/Audiobooks:/audiobooks
