@@ -1,6 +1,6 @@
 services:
     traefik:
-        image: traefik:v3.7
+        image: traefik:v3.7.13
         container_name: traefik
         command:
             - "--log.level=INFO"
@@ -34,6 +34,7 @@ services:
             - INFOMANIAK_ACCESS_TOKEN
             - LAN_DOMAIN
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.traefik.entryPoints=lansecure
             - traefik.http.routers.traefik.rule=Host(`traefik.${LAN_DOMAIN}`)
@@ -50,6 +51,7 @@ services:
             - PGID
             - TZ
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.prowlarr.entryPoints=lansecure
             - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${LAN_DOMAIN}`)
@@ -68,6 +70,7 @@ services:
             - PGID
             - TZ
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.sonarr.entryPoints=lansecure
             - traefik.http.routers.sonarr.rule=Host(`sonarr.${LAN_DOMAIN}`)
@@ -86,6 +89,7 @@ services:
             - PGID
             - TZ
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.bazarr.entryPoints=lansecure
             - traefik.http.routers.bazarr.rule=Host(`bazarr.${LAN_DOMAIN}`)
@@ -104,6 +108,7 @@ services:
             - PGID
             - TZ
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.radarr.entryPoints=lansecure
             - traefik.http.routers.radarr.rule=Host(`radarr.${LAN_DOMAIN}`)
@@ -126,6 +131,7 @@ services:
             - 6881:6881
             - 6881:6881/udp
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.qbittorrent.entryPoints=lansecure
             - traefik.http.routers.qbittorrent.rule=Host(`torrent.${LAN_DOMAIN}`)
@@ -141,6 +147,7 @@ services:
             - ${BASE_PATH}/qui:/config
             - /volume1/Media/Downloads:/media/Downloads
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.qui.entryPoints=lansecure
             - traefik.http.routers.qui.rule=Host(`qui.${LAN_DOMAIN}`)
@@ -175,6 +182,7 @@ services:
             - /volume1/Media/Books:/books
             - ${BASE_PATH}/cops/config:/config
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.cops.entryPoints=lansecure
             - traefik.http.routers.cops.rule=Host(`cops.${LAN_DOMAIN}`)
@@ -220,6 +228,8 @@ services:
         volumes:
             - ${BASE_PATH}/actual:/data
         labels:
+            - diun.enable=true
+            - diun.include_tags=^\d+\.\d+\.\d+-alpine$
             - traefik.enable=true
             - traefik.http.routers.actual.entryPoints=lansecure
             - traefik.http.routers.actual.rule=Host(`actual.${LAN_DOMAIN}`)
@@ -236,6 +246,7 @@ services:
             - ${BASE_PATH}/adguard/work:/opt/adguardhome/work
             - ${BASE_PATH}/adguard/conf:/opt/adguardhome/conf
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.adguard.entryPoints=lansecure
             - traefik.http.routers.adguard.rule=Host(`adguard.${LAN_DOMAIN}`)
@@ -248,6 +259,7 @@ services:
         volumes:
             - /volume1/Archive/Photos:/usr/src/app/upload
         labels:
+            - diun.enable=true
             - traefik.enable=true
             - traefik.http.routers.immich.entryPoints=lansecure
             - traefik.http.routers.immich.rule=Host(`immich.${LAN_DOMAIN}`)
@@ -271,6 +283,8 @@ services:
         image: ghcr.io/immich-app/immich-machine-learning:v3.2.2
         volumes:
             - model-cache:/cache
+        labels:
+            - diun.enable=true
         environment:
             DB_USERNAME: ${IMMICH_DB_USERNAME}
             DB_PASSWORD: ${IMMICH_DB_PASSWORD}
@@ -297,6 +311,30 @@ services:
             POSTGRES_INITDB_ARGS: '--data-checksums'
         volumes:
             - ${BASE_PATH}/immich-db:/var/lib/postgresql/data
+        restart: unless-stopped
+
+    diun:
+        image: crazymax/diun:4.33.0
+        container_name: diun
+        command: serve
+        volumes:
+            - ${BASE_PATH}/diun:/data
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        environment:
+            - TZ
+            - DIUN_NOTIF_PUSHOVER_TOKEN
+            - DIUN_NOTIF_PUSHOVER_RECIPIENT
+            - DIUN_WATCH_WORKERS=20
+            - DIUN_WATCH_SCHEDULE=0 */6 * * *
+            - DIUN_WATCH_JITTER=30s
+            - DIUN_PROVIDERS_DOCKER=true
+            - DIUN_DEFAULTS_WATCHREPO=true
+            - DIUN_DEFAULTS_MAXTAGS=3
+            - DIUN_DEFAULTS_SORTTAGS=semver
+            - DIUN_DEFAULTS_INCLUDETAGS=^v?\d+\.\d+\.\d+$
+        labels:
+            - diun.enable=true
+
         restart: unless-stopped
 
 volumes:
