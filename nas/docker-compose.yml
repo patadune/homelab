@@ -154,23 +154,6 @@ services:
             - traefik.http.services.qui.loadbalancer.server.port=7476
         restart: unless-stopped
 
-    audiobookshelf:
-        image: ghcr.io/advplyr/audiobookshelf:2.36.0
-        container_name: audiobookshelf
-        volumes:
-            - /volume1/Media/Audiobooks:/audiobooks
-            - /volume1/Media/Podcasts:/podcasts
-            - ${BASE_PATH}/bookshelf/config:/config
-            - ${BASE_PATH}/bookshelf/metadata:/metadata
-        environment:
-            - TZ
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.bookshelf.entryPoints=lansecure
-            - traefik.http.routers.bookshelf.rule=Host(`bookshelf.${LAN_DOMAIN}`)
-            - traefik.http.services.bookshelf.loadbalancer.server.port=80
-        restart: unless-stopped
-
     cops:
         image: lscr.io/linuxserver/cops:4.5.4
         container_name: cops
