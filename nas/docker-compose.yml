@@ -42,7 +42,7 @@ services:
         restart: unless-stopped
 
     prowlarr:
-        image: lscr.io/linuxserver/prowlarr:2.5.2
+        image: lscr.io/linuxserver/prowlarr:2.6.5
         container_name: prowlarr
         volumes:
             - ${BASE_PATH}/prowlarr:/config
@@ -141,7 +141,7 @@ services:
         restart: unless-stopped
 
     qui:
-        image: ghcr.io/autobrr/qui:v1.29.0
+        image: ghcr.io/autobrr/qui:v1.30.0
         container_name: qui
         volumes:
             - ${BASE_PATH}/qui:/config
@@ -172,7 +172,7 @@ services:
         restart: unless-stopped
 
     cops:
-        image: lscr.io/linuxserver/cops:4.5.2
+        image: lscr.io/linuxserver/cops:4.5.4
         container_name: cops
         environment:
             - PUID
