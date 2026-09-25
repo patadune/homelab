@@ -174,7 +174,7 @@ services:
         restart: unless-stopped
 
     paperless-valkey:
-        image: valkey/valkey:9.1-alpine
+        image: valkey/valkey:9.1.2-alpine
         container_name: paperless-valkey
         restart: unless-stopped
         volumes:
@@ -279,9 +279,12 @@ services:
 
     immich-redis:
         container_name: immich_redis
-        image: valkey/valkey:9.1-alpine
+        image: valkey/valkey:9.1.2-alpine
         healthcheck:
             test: redis-cli ping || exit 1
+        labels:
+            - diun.enable=true
+            - diun.include_tags=^\d+\.\d+\.\d+-alpine$
         restart: unless-stopped
 
     immich-db:
